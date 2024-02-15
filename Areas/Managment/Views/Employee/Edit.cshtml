@@ -1,0 +1,153 @@
+﻿@using Clinc_Care_MVC_Grad_PROJ.Areas.Managment.Models;
+@model Clinc_Care_MVC_Grad_PROJ.Areas.Managment.Models.Employee
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h4 class="m-0 font-weight-bold text-primary"><i class="fa-solid fa-user-pen fa-xl"></i> Edit User</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="EmpFirstName" class="control-label"></label>
+                                <font color="red">*</font>
+                                <input asp-for="EmpFirstName" class="form-control" />
+                                <span asp-validation-for="EmpFirstName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="EmpLastName" class="control-label"></label>
+                                <font color="red">*</font>
+                                <input asp-for="EmpLastName" class="form-control" />
+                                <span asp-validation-for="EmpLastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="EmpBirthDate" class="control-label"></label>
+                                <font color="red">*</font>
+
+                                <input asp-for="EmpBirthDate" class="form-control" />
+                                <span asp-validation-for="EmpBirthDate" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="EmpGender" class="control-label"></label>
+                                <font color="red">*</font>
+
+                                <select asp-for="EmpGender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control"></select>
+                                <span asp-validation-for="EmpGender" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="EmpPhone" class="control-label"></label>
+                                <font color="red">*</font>
+
+                                <input asp-for="EmpPhone" class="form-control" />
+                                <span asp-validation-for="EmpPhone" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label asp-for="EmpAddress" class="control-label"></label>
+                                <font color="red">*</font>
+
+                                <input asp-for="EmpAddress" class="form-control" />
+                                <span asp-validation-for="EmpAddress" class="text-danger"></span>
+                            </div>
+
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="EmpEmail" class="control-label"></label>
+                                <font color="red">*</font>
+
+                                <input readonly asp-for="EmpEmail" class="form-control" />
+                                <span asp-validation-for="EmpEmail" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="EmpPassword" class="control-label"></label>
+                                <font color="red">*</font>
+
+                                <input asp-for="EmpPassword" class="form-control" />
+                                <span asp-validation-for="EmpPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="EmpNationalId" class="control-label"></label>
+                                <input asp-for="EmpNationalId" class="form-control" />
+                                <span asp-validation-for="EmpNationalId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="EmpSalary" class="control-label"></label>
+                                <input asp-for="EmpSalary" class="form-control" />
+                                <span asp-validation-for="EmpSalary" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="EmployeeTypeId" class="control-label"></label>
+                                <select asp-for="EmployeeTypeId" class="form-control" asp-items="ViewBag.EmpTypeList"></select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label id="DoctorSpecializion" class="control-label">DoctorSpecializion</label>
+                                <select name="DoctorSpecializion" class="form-control" asp-items="ViewBag.DoctorSpecializionList">
+                                    <option value="0"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label asp-for="RoleName" class="control-label"></label>
+                            <select asp-for="RoleName" class="form-control" asp-items="ViewBag.Rolelist"></select>
+                        </div>
+                        <br />
+                        <div class="form-group row">
+                            <div class="col-sm-9">
+
+                                @*                                <input type="submit" value="Create" class="btn btn-primary" />
+                                *@                                <button type="submit" class="btn btn-primary"> <i class="bi bi-person-plus-fill"></i> Create </button>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    const EmpFirstName = document.getElementById("EmpFirstName");
+    const EmpPhone = document.getElementById("EmpPhone");
+    const EmpEmail = document.getElementById("EmpEmail");
+    EmpPhone.addEventListener("blur", () => {
+        if (EmpFirstName.value != "" && EmpPhone.value != "") {
+            EmpEmail.value = `${EmpFirstName.value}_${Math.floor((parseInt(2 + EmpPhone.value) / 250000) * 2)}@@roshetaclinic.org`
+        } else {
+            EmpEmail.value = ''
+        }
+    })
+
+    EmpFirstName.addEventListener("blur", () => {
+        if (EmpFirstName.value != "" && EmpPhone.value != "") {
+            EmpEmail.value = `${EmpFirstName.value}_${Math.floor((parseInt(2 + EmpPhone.value) / 250000) * 2)}@@roshetaclinic.org`
+        } else {
+            EmpEmail.value = ''
+        }
+    })
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

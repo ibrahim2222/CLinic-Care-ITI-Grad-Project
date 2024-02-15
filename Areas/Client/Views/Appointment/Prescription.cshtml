@@ -1,0 +1,290 @@
+﻿@model Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models.Appointment
+@inject Clinc_Care_MVC_Grad_PROJ.Models.UnitOfWork.IUnitOfWork UnitOfWork
+@{
+    DateTime currentDate = DateTime.Today;
+
+    int age = 0;
+    if (Model.PatientIdNavigation.PatientBirthDate != null)
+    {
+        age = currentDate.Year - Model.PatientIdNavigation.PatientBirthDate.Value.Year;
+
+        if (Model.PatientIdNavigation.PatientBirthDate.Value.Date > currentDate.AddYears(-age))
+        {
+            age--;
+        }
+    }
+}
+<style>
+    @@media print {
+        body {
+            visibility: hidden;
+        }
+
+        #contentToPrint {
+            visibility: visible;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width:100% !important;
+            margin:0;
+        }
+
+        #accordionSidebar {
+            width:0px !important;
+        }
+
+        #wrapper{
+            width:100%!important;
+        }
+        @@page {
+            margin: 0;
+         }
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-end mb-4">
+        <h1 class="h3 mb-0 text-gray-800"></h1>
+        <button id="printButton" class="d-none d-sm-inline-block btn btn-sm btn-outline-primary print_prescription m-2 ">
+            <i class="fas fa-print"></i>
+            Print
+        </button>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <div class="card shadow mb-4">
+                <div class="card-body" id="contentToPrint">
+                    <div class="row">
+                        <div class="col font-size-13">
+                            <p>
+                                <b>
+                                    Doctor :
+                                </b>
+                                @Model.DoctorIdNavigation.EmployeeFullName <br>
+                                <b>
+                                    Specializition :
+                                </b>
+                                @Model.DoctorIdNavigation.EmpDoctorSpecilzations.FirstOrDefault().DoctorSpecilzationIdNavigation.SpecializationName<br>
+                                <b>
+                                    Phone :
+                                </b>
+                                @Model.DoctorIdNavigation.EmpPhone<br>
+                            </p>
+                        </div>
+                        <div class="col text-center">
+                            <img src="/imgs/Logo/Flex-Logo.png" width="75%">
+                            <br>
+                            <br>
+                        </div>
+                        <div class="col font-size-13">
+                            <p>
+                                <b>
+                                    Date :
+                                </b>
+                                @Model.AppointmentDate.ToString("yyyy-MMM-dd")
+                                <br>
+
+                                <b>
+                                    Patient Name :
+                                </b>
+                                @Model.PatientIdNavigation.PatientFullName
+                                <br>
+                                <b>
+                                    Age :
+                                </b>
+                                @age
+                                <br>
+                                <b>
+                                    Total Fees :
+                                </b>
+                                @UnitOfWork.FeeRepository.GetAllFees().Where(f=>f.FeeName == Model.AppointmentTypeIdNavigation.TypeName).FirstOrDefault().FeeAmount
+                                <br>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="text-center mt-3">
+                                <b>Prescription</b>
+                            </h5>
+                            <hr>
+                        </div>
+                    </div>
+                    @if (Model.MedicineOrders.Count > 0)
+                    {
+                        <div class="container-fluid">
+                            <div class="row justify-content-center">
+                                <div class="col-md-12">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header py-3">
+                                            <h5 class="text-primary fw-bold"> <i class="fa-solid fa-capsules fa-fade"></i> Medicines</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Medicine Name</th>
+                                                            <th scope="col">Dosage</th>
+                                                            <th scope="col">Instructions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @{
+                                                            var counter = 0;
+                                                        }
+                                                        @foreach (var medicine in Model.MedicineOrders)
+                                                        {
+                                                            counter++;
+                                                            <tr>
+                                                                <th scope="row">@counter</th>
+                                                                <td>@medicine.MedicineIdNavigation.MedicineName</td>
+                                                                <td><span class="badge bg-success">@medicine.DosageIdNavigation.DosageName</span></td>
+                                                                <td>@medicine.Instructions</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.LaboratoryOrders.Count > 0)
+                    {
+                        <div class="container-fluid">
+                            <div class="row justify-content-center">
+                                <div class="col-md-12">
+                                    <div class="card shadow mb-4">
+
+                                        <div class="card-header py-3">
+                                            <h5 class="text-primary fw-bold"> <i class="fa-solid fa-flask fa-fade"></i> Lab Orders </h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Lab test Name</th>
+                                                            <th scope="col">Is Internal</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @{
+                                                            var counter = 0;
+                                                        }
+                                                        @foreach (var lab in Model.LaboratoryOrders)
+                                                        {
+                                                            counter++;
+                                                            <tr>
+                                                                <th scope="row">@counter</th>
+                                                                <td>@lab.LaboratoryTypeIdNavigation.LabName</td>
+                                                                @if (lab.IsInternal == true)
+                                                                {
+                                                                    <td><span class="badge bg-success">Inside</span></td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td><span class="badge bg-danger">Outside</span></td>
+                                                                }
+
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                    @if (Model.RadiologyOrders.Count > 0)
+                    {
+                        <div class="container-fluid">
+                            <div class="row justify-content-center">
+                                <div class="col-md-12">
+                                    <div class="card shadow mb-4">
+
+                                        <div class="card-header py-3">
+                                            <h5 class="text-primary fw-bold"> <i class="fa-solid fa-x-ray fa-fade"></i> Radiology Orders</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Radiology test Name</th>
+                                                            <th scope="col">Is Internal</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @{
+                                                            var counter = 0;
+                                                        }
+                                                        @foreach (var radiologyOrder in Model.RadiologyOrders)
+                                                        {
+                                                            counter++;
+                                                            <tr>
+                                                                <th scope="row">@counter</th>
+                                                                <td>@radiologyOrder.RadiologyTypeIdNavigation.RadiologyName</td>
+                                                                @if (radiologyOrder.IsInternal == true)
+                                                                {
+
+                                                                    <td><span class="badge bg-success">Inside</span></td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td><span class="badge bg-danger">Outside</span></td>
+
+                                                                }
+
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+                    <div style="margin-bottom: 150px;"></div>
+                    <div class="row">
+                        <div class="col-8"></div>
+                        <div class="col-4">
+                            <hr style="border: 1px solid black;">
+                            <h6 class="text-center mt-3">
+                                <b>Signature, Stamp</b>
+                            </h6>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 150px;"></div>
+                    <div class="row">
+                        <div class="col">
+                            <p class="font-size-14 text-center"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+<script>
+    document.getElementById("printButton").addEventListener("click", function () {
+        window.print();
+    });
+</script>

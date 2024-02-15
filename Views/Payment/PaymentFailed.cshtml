@@ -1,0 +1,63 @@
+﻿@{
+    ViewData["Title"] = "Booking Faild";
+}
+
+<style>
+    ._failed {
+        border-bottom: solid 4px red !important;
+    }
+
+        ._failed i ,
+        ._failed svg {
+            color: red !important;
+        }
+
+    ._success {
+        box-shadow: 0 15px 25px #00000019;
+        padding: 45px;
+        width: 100%;
+        text-align: center;
+        margin: 40px auto;
+        border-bottom: solid 4px #28a745;
+        background-color: #eee;
+    }
+
+        ._success i ,
+        ._success svg {
+            font-size: 55px;
+            color: #28a745;
+        }
+
+        ._success h2 {
+            margin-bottom: 12px;
+            font-size: 40px;
+            font-weight: 500;
+            line-height: 1.2;
+            margin-top: 10px;
+        }
+
+        ._success p {
+            margin-bottom: 0px;
+            font-size: 18px;
+            color: #495057;
+            font-weight: 500;
+        }
+
+    main {
+        height: 55vh;
+        background-image: url("/imgs/SuccessBooking.jpg");
+        background-size: cover;
+        backdrop-filter: blur(5px);
+    }
+</style>
+<div class="container h-100 d-flex align-items-center justify-content-center ">
+    <div class="row justify-content-center w-100 ">
+        <div class="col-md-5">
+            <div class="message-box _success _failed">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+                <h2> Your payment failed </h2>
+                <a class="btn btn-outline-danger" asp-action="index" asp-controller="home" asp-area="" asp-fragment="Appointment-form">  Try again  </a>
+            </div>
+        </div>
+    </div>
+</div> 

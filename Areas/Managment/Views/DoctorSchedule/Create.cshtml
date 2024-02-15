@@ -1,0 +1,67 @@
+﻿@model Clinc_Care_MVC_Grad_PROJ.Models.ViewModels.SchedVm
+
+@{
+    ViewData["Title"] = "Create";
+}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h2 class="m-0 font-weight-bold text-primary"><i class="fa-solid fa-business-time fa-lg"></i> Create Doctor Schedule</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label asp-for="DoctorIdNavigation.EmployeeFullName" class="control-label"></label>
+                                <select asp-for="DoctorId" class="form-control" asp-items="ViewBag.DoctorList"></select>
+                            </div>
+                        </div>
+                        <div class="form-group d-flex align-items-center justify-content-evenly">
+                            <div>
+                                <label for="DaysOfWeek1" class="control-label">Saturday</label>
+                                <input type="checkbox" id="DaysOfWeek1" name="DaysOfWeek" value="1" class="form-check"  />
+                            </div>
+                            <div>
+                                <label for="DaysOfWeek2" class="control-label">Sunday</label>
+                                <input type="checkbox" id="DaysOfWeek2" name="DaysOfWeek" value="2" class="form-check"  />
+                            </div>
+                            <div>
+                                <label for="DaysOfWeek4" class="control-label">Monday</label>
+                                <input type="checkbox" id="DaysOfWeek4" name="DaysOfWeek" value="4" class="form-check"  />
+                            </div>
+                            <div>
+                                <label for="DaysOfWeek8" class="control-label">Tuesday</label>
+                                <input type="checkbox" id="DaysOfWeek8" name="DaysOfWeek" value="8" class="form-check" />
+                            </div>
+                            <div>
+                                <label for="DaysOfWeek16" class="control-label">Wednesday</label>
+                                <input type="checkbox" id="DaysOfWeek16" name="DaysOfWeek" value="16" class="form-check"/>
+                            </div>
+                            <div>
+                                <label for="DaysOfWeek32" class="control-label">Thursday</label>
+                                <input type="checkbox" id="DaysOfWeek32" name="DaysOfWeek" value="32" class="form-check"  />
+                            </div>
+                            <div>
+                                <label for="DaysOfWeek64" class="control-label">Friday</label>
+                                <input type="checkbox" id="DaysOfWeek64" name="DaysOfWeek" value="64" class="form-check" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" id="SaveBtn" value="Save" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,24 @@
+﻿@model Clinc_Care_MVC_Grad_PROJ.Areas.Managment.Models.RadiologyType
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>LaboratoryType</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.RadiologyName)
+        </dt> 
+        <dt class = "col-sm-2">
+            @Html.DisplayFor(model => model.RadiologyName)
+        </dt>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.RadiologyTypeId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

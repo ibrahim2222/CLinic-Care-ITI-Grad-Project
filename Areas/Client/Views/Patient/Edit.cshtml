@@ -1,0 +1,81 @@
+@using Clinc_Care_MVC_Grad_PROJ.Areas.Managment.Models;
+@model Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models.Patient
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<hr />
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h4 class="m-0 font-weight-bold text-primary"><i class="fa-solid fa-user-pen fa-bounce"></i> Edit Patient</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="PatientFirstName" class="control-label"></label>
+                                <input asp-for="PatientFirstName" class="form-control" />
+                                <span asp-validation-for="PatientFirstName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="PatientLastName" class="control-label"></label>
+                                <input asp-for="PatientLastName" class="form-control" />
+                                <span asp-validation-for="PatientLastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="PatientPhone" class="control-label"></label>
+                                <input asp-for="PatientPhone" class="form-control" />
+                                <span asp-validation-for="PatientPhone" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="PatientBirthDate" class="control-label"></label>
+                                <input asp-for="PatientBirthDate" class="form-control" />
+                                <span asp-validation-for="PatientBirthDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="PatientGender" class="control-label"></label>
+                                <select asp-items="@Html.GetEnumSelectList<Gender>()" asp-for="PatientGender" class="form-control"></select>
+                                <span asp-validation-for="PatientGender" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label asp-for="PatientEmail" class="control-label"></label>
+                                <input asp-for="PatientEmail" class="form-control" readonly />
+                                <span asp-validation-for="PatientEmail" class="text-danger"></span>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="PatientTypeId" class="control-label"></label>
+                            <select asp-for="PatientTypeId" class="form-control" asp-items="ViewBag.PatientTypeList"></select>
+                            <span asp-validation-for="PatientTypeId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            @*<label asp-for="PatientPassword" class="control-label"></label>*@
+                            <input hidden asp-for="PatientPassword" class="form-control" />
+                            <span asp-validation-for="PatientPassword" class="text-danger"></span>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-9">
+                                <button type="submit" class="btn btn-primary"> <i class="fa-solid fa-pen-to-square"></i> Edit </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

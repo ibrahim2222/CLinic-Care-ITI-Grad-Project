@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Clinc_Care_MVC_Grad_PROJ.Areas.Managment.Models.LaboratoryRecord>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.LaboratoryRecordId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LabResult)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LabRecordsDate)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.PatientIdNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LaboratoryTypeIdNavigation)
+            </th>*@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.LaboratoryRecordId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LabResult)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LabRecordsDate)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.PatientIdNavigation.PatientEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LaboratoryTypeIdNavigation.LabName)
+            </td>*@
+            <td>
+                    <a asp-action="Edit" asp-route-id="@item.LaboratoryRecordId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.LaboratoryRecordId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.LaboratoryRecordId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

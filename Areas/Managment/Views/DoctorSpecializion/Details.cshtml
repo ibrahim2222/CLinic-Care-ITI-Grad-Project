@@ -1,0 +1,29 @@
+﻿@model Clinc_Care_MVC_Grad_PROJ.Areas.Managment.Models.DoctorSpecializion
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details On DoctorSpecializion</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SpecializationId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SpecializationId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SpecializationName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SpecializationName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.SpecializationId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

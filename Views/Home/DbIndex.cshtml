@@ -1,0 +1,110 @@
+﻿@using Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models
+@inject Clinc_Care_MVC_Grad_PROJ.Models.UnitOfWork.IUnitOfWork UnitOfWork
+    
+@{
+    Layout = "_Layout2";
+    ViewData["Title"] = "DashBoard";
+    var today = DateTime.Now.ToString("yyyy-MM-dd");
+    int totalTodayAppointments = UnitOfWork.AppointmentRepository.GetAllAppointments().Count;
+
+    int NoOfPatients = UnitOfWork.PatientRepository.GetAllPatients().Count;
+    int CanceledAppointments = UnitOfWork.AppointmentRepository.GetAllAppointments().Where(app => app.IsCanceled == true).ToList().Count;
+    int TodayAppointments = UnitOfWork.AppointmentRepository.GetAllAppointments().Where(App => App.AppointmentState == AppointmentStates.reserverd && App.IsCanceled == false && App.AppointmentDate.ToString("yyyy-MM-dd") == today).ToList().Count;
+}
+
+<style>
+    h1{
+        font-family: 'Caveat', cursive;
+    }
+    main {
+        height: 65vh;
+    }
+   
+</style>
+
+<h1>Dashboard Home</h1>
+
+<div class="d-flex h-100 align-items-center justify-content-evenly flex-column w-100 container-fluid">
+
+    <div class="d-flex flex-column align-items-center justify-content-evenly h-100 ">
+        <h1>Welcome !</h1>
+        <img src="/imgs/Logo/Flex-Logo.png" />
+    </div>
+
+    @if (!User.IsInRole("Examination"))
+    {
+        <div class="row m-5 w-100">
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">All Appointments </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@totalTodayAppointments</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fa-solid fa-calendar-days fa-2x"></i>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Today's Appointments</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@TodayAppointments</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar-check fa-2x text-black animate__animated animate__bounce"></i>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Canceled Appointments</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                @CanceledAppointments
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fa-solid fa-user-xmark fa-2x"></i>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1"># of Patients</div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">@NoOfPatients</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-plus fa-2x text-black-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    }
+</div>

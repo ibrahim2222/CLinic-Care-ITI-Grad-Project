@@ -1,0 +1,160 @@
+﻿@using Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models;
+@using System.Security.Claims;
+@model IEnumerable<Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models.Appointment>
+@inject Clinc_Care_MVC_Grad_PROJ.Models.UnitOfWork.IUnitOfWork UnitOfWork
+
+@{
+    ViewData["Title"] = "DoctorReadyAppointments";
+}
+@{
+    DateTime dateTime = DateTime.Now;
+    string formattedDate = dateTime.ToString("d/M/yyyy");
+    var UserEmail = User.FindFirst(ClaimTypes.Name)?.Value;
+    var DoctorID = UnitOfWork.EmployeeRepository.GetAllEmployees().Where(Emp => Emp.EmpEmail == UserEmail).FirstOrDefault().EmpId;
+}
+
+<div id="content-wrapper" class="d-flex flex-column">
+    <div id="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-9">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <div class="row">
+                                <div class="col-6">
+                                    <h6 class="m-0 font-weight-bold text-primary w-75 p-2"><i class="fa-solid fa-clipboard-check fa-2xl"></i> Ready Appointments</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.AppointmentId)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.PatientIdNavigation.PatientFullName)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.AppointmentTypeIdNavigation.TypeName)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.AppointmentState)
+                                            </th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                      
+                                        @foreach (var item in Model.Where(App => App.AppointmentState == AppointmentStates.ready && App.IsCanceled == false && App.AppointmentDate.ToString("d/M/yyyy") == formattedDate && App.DoctorId == DoctorID))
+                                        {
+                                            <tr class="text-center">
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.AppointmentId)
+                                                </td>
+
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.PatientIdNavigation.PatientFullName)
+                                                </td>
+                                                <td>
+                                                    <label class="badge badge-warning-soft"><i class="fa-regular fa-calendar-check"></i>  @Html.DisplayFor(modelItem =>  item.AppointmentTypeIdNavigation.TypeName)</label>
+                                                </td>
+                                                <td>
+                                                    <label class="badge badge-success-soft"><i class="fa-solid fa-thumbs-up fa-bounce fa-lg"></i> @Html.DisplayFor(modelItem => item.AppointmentState)</label>
+                                                </td>
+                                                <td>
+                                                    <a asp-action="DetailedPatientAppointment" asp-route-id="@item.AppointmentId" class="btn btn-outline-primary"><i class="fa-solid fa-circle-play"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="card border-left-success shadow py-2 my-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Current patient</div>
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col-auto">
+                                            <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"> 
+                                                @{
+                                                    var TodayApp = UnitOfWork.AppointmentRepository.GetAllAppointments().Where(App => App.AppointmentDate.ToString("dd/MM/yyyy") == DateTime.Now.ToString("dd/MM/yyyy"));
+                                                    
+                                                }
+                                                @{
+                                                    var Temp = TodayApp.Where(App => App.DoctorId == DoctorID && App.AppointmentState == AppointmentStates.ready).FirstOrDefault();
+                                                }
+                                                @if (Temp != null)
+                                                {
+                                                    @Temp.PatientIdNavigation.PatientFullName
+                                                }
+                                                else
+                                                {
+                                                    <span>----</span>
+                                                } 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto"><i class="fas fa-user-check fa-2x text-black-300"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card border-left-warning shadow py-2 my-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Next patient</div>
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col-auto">
+                                            <div class="h5 mb-0 mr-3 font-weight-bold text-black-800"> 
+                                                @{
+                                                    var Temp2 = TodayApp.Where(App => App.DoctorId == DoctorID && App.AppointmentState == AppointmentStates.ready).Skip(1).FirstOrDefault();
+                                                }
+                                                @if (Temp2 != null)
+                                                {
+                                                    @Temp2.PatientIdNavigation.PatientFullName
+                                                }
+                                                else
+                                                {
+                                                    <strong>----</strong>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto"><i class=" fas fa-user-injured fa-2x text-black-300"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card border-left-danger shadow py-2 my-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Waiting patients</div>
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col-auto">
+                                            <div class="h5 mb-0 mr-3 font-weight-bold text-black-800">@Model.Where(App => App.AppointmentState == AppointmentStates.ready && App.IsCanceled == false && App.AppointmentDate.ToString("d/M/yyyy") == formattedDate && App.DoctorId == DoctorID).Count()</div>
+                                            @*23ml add le condition en el doctor yshoof bs 3dd el patient fe t5asosoo*@
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-user-clock fa-2x text-black-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

@@ -1,0 +1,150 @@
+﻿@model IEnumerable<Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models.Appointment>
+@namespace Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models
+
+@{
+    ViewData["Title"] = "Index";
+}
+@{
+    Layout = "_Layout2";
+}
+@{
+    var today = DateTime.Now.ToString("dd/MM/yyyy");
+    
+    int totaltodayCheckups = Model
+    .Where(b => b.AppointmentState == AppointmentStates.queued && b.AppointmentDate.ToString("dd/MM/yyyy") == today)
+    .Select(a => a.PatientIdNavigation.Appointments)
+    .Count();
+
+    int totalTodayCompletedCheckUps = Model
+    .Where(b => b.AppointmentState == AppointmentStates.ready && b.AppointmentDate.ToString("dd/MM/yyyy") == today)
+    .Select(a => a.PatientIdNavigation.Appointments)
+    .Count();
+
+}
+
+<div class="row">
+
+    <div class="col-xl-6 col-md-12 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Today's Check Up's</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@totaltodayCheckups</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fa-solid fa-calendar-days fa-2x"></i>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-md-12 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Completed Check Up's</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@totalTodayCompletedCheckUps</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar-check fa-2x text-black animate__animated animate__bounce"></i>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <div class="row">
+                    <div class="col-8">
+                        <h6 class="m-0 font-weight-bold text-primary w-75 p-2">
+                            <i class="fa-solid fa-calendar-check fa-2x fa-bounce"></i>
+                            Today's Appointment - <span> </span>@{
+                                @today
+                            }
+                        </h6>
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="dataTable" width="100%">
+                        <thead class="text-center">
+                            <tr>
+                                <th>
+                                    <label>Appointment ID</label>
+                                </th>
+                                <th>
+                                    <label>Patient Name</label>
+                                </th>
+                                <th>
+                                    <label>Appointment Specialization</label>
+                                </th>
+                                <th>
+                                    <label>Appointment Status</label>
+                                </th>
+                                <th>
+                                    <label> Appoint. Created at</label>
+                                </th>
+
+                                <th><i class="fas fa-cog fa-spin"></i> Action </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Where(App => App.AppointmentState == AppointmentStates.queued))
+                            {
+
+                                <tr>
+
+                                    <td class="text-center">
+                                        @Html.DisplayFor(modelItem => item.AppointmentId)
+                                    </td>
+                                    <td class="text-center">
+
+                                        @Html.DisplayFor(modelItem => item.PatientIdNavigation.PatientFullName)
+
+                                    </td>
+                                    <td class="text-center">
+                                        <label class="badge badge-primary-soft">
+                                            <i class="fa-solid fa-heart-pulse fa-beat"></i>  @if (item.DoctorIdNavigation.IsDeleted == false)
+                                            {
+                                                @Html.DisplayFor(modelItem =>
+                                        item.DoctorIdNavigation.EmpDoctorSpecilzations.FirstOrDefault().DoctorSpecilzationIdNavigation.SpecializationName )
+                                            }
+                                            else
+                                            {
+                                                @Html.DisplayFor(modelItem =>
+                                        item.DoctorIdNavigation.DeletedEmpDoctorSpecilzations.FirstOrDefault().DoctorSpecilzationIdNavigation.SpecializationName )
+                                            }
+                                        </label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label class="badge badge-warning-soft">
+                                            <i class="fas fa-spinner fa-pulse"></i> @Html.DisplayFor(modelItem => item.AppointmentState)
+                                        </label>
+                                    </td>
+                                    <td class="text-center">@Html.DisplayFor(modelItem => item.CreatedAppointmentDate)</td>
+                                    <td class="text-center">
+
+                                        <a asp-action="Create" asp-route-id="@item.AppointmentId" class="btn btn-outline-primary btn-sm"> <i class="fa-solid fa-bolt fa-flip"></i>Add Vitals</a>
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

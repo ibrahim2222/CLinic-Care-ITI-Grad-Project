@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models.Appointment>
+
+@{
+    ViewData["Title"] = "DoctorReadyAppointments";
+}
+
+<h1>DoctorReadyAppointments</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AppointmentId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PatientIdNavigation.PatientFullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppointmentTypeIdNavigation.TypeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppointmentState)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AppointmentId)
+            </td>
+          
+            <td>
+                @Html.DisplayFor(modelItem => item.PatientIdNavigation.PatientFullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem =>  item.AppointmentTypeIdNavigation.TypeName)
+            </td>
+            <td>
+                <i class="bi bi-check2-all"></i>
+                @Html.DisplayFor(modelItem => item.AppointmentState)
+            </td>
+            <td>
+                    <a asp-action="ReadyAppointmentDetails" asp-route-id="@item.AppointmentId">View</a> |
+             
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,918 @@
+﻿@using Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models;
+@using Clinc_Care_MVC_Grad_PROJ.Areas.Managment.Models;
+@using System.Security.Claims;
+@model Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models.Appointment
+@inject Clinc_Care_MVC_Grad_PROJ.Models.UnitOfWork.IUnitOfWork UnitOfWork
+
+@{
+    ViewData["Title"] = "Details";
+}
+@{
+    Layout = "_Layout2";
+}
+@{
+    var UserEmail = User.FindFirst(ClaimTypes.Name)?.Value;
+    var DoctorID = UnitOfWork.EmployeeRepository.GetAllEmployees().Where(Emp => Emp.EmpEmail == UserEmail).FirstOrDefault().EmpId;
+
+}
+
+<div id="app">
+    <div id="wrapper">
+
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+
+                <div class="container-fluid">
+                    <div class="row justify-content-center">
+                        <div class="col">
+                            <div class="card shadow mb-4">
+
+                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#MarkTreatedModal">
+                                    <i class="fa-solid fa-clipboard-check"></i> Mark as Treated
+                                </button>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3 col-sm-6">
+                                            <div class="card profile">
+                                                <div class="card-body">
+                                                    <div class="text-center">
+                                                        <img src="/imgs/Avatar.jpg" alt="" class="rounded-circle img-thumbnail avatar-xl">
+                                                        <div class="online-circle">
+                                                            <i class="fa fa-circle text-success"></i>
+                                                        </div>
+                                                        <h4 class="mt-2">@Model.PatientIdNavigation.PatientFullName</h4>
+
+
+                                                        <ul class="list-unstyled list-inline mt-3 text-muted">
+                                                            <li class="list-inline-item font-size-13 me-3">
+                                                                <b class="text-dark">
+                                                                    @{
+                                                                        int totalAppointments =
+                                                                        Model.PatientIdNavigation.Appointments.Where(App => App.PatientId == Model.PatientId && App.DoctorId == @DoctorID).Count();
+                                                                    }
+                                                                    @totalAppointments
+                                                                </b>
+                                                                Appointments
+                                                            </li>
+
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- end card -->
+                                            <div class="table-responsive mt-3">
+                                                <table class="table table-striped mb-0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">Contact No: </th>
+                                                            <td> @Model.PatientIdNavigation.PatientPhone </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">E-mail:</th>
+                                                            <td> @Model.PatientIdNavigation.PatientEmail </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Age:</th>
+                                                            <td>
+                                                                @{
+                                                                    DateTime birthDate = DateTime.ParseExact(@Model.PatientIdNavigation.PatientBirthDate.Value.ToString("MM,dd,yyyy"), "MM,dd,yyyy", null);
+                                                                    int age = DateTime.Now.Year - birthDate.Year;
+                                                                }
+                                                                @age
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Gender:</th>
+                                                            <td> @Model.PatientIdNavigation.PatientGender </td>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <th scope="row">Patient Type:</th>
+                                                            <td> @Model.PatientIdNavigation.PatientTypeIdNavigation.PatientTypeName </td>
+                                                        </tr>
+
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="col-md-9 col-sm-6">
+                                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link active" id="documents-tab" data-toggle="tab" href="#documents" role="tab" aria-controls="documents" aria-selected="false"> <i class="fa-regular fa-calendar-check"></i> Current Appointment</a>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="Profile" aria-selected="true"><i class="fa-regular fa-calendar-check"></i> Previous - Appointments</a>
+                                                </li>
+                                            </ul>
+                                            <div class="tab-content" id="myTabContent">
+                                                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                                    <div class="row my-4">
+                                                        <div class="col">
+                                                            <table class="table mt-3">
+                                                                <thead class="text-center">
+                                                                    <tr class="text-center">
+                                                                        <th>
+                                                                            <label>ID</label>
+                                                                        </th>
+                                                                        <th>
+                                                                            <label>Appointment Date</label>
+                                                                        </th>
+                                                                        <th>
+                                                                            <label>Action</label>
+                                                                        </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @{
+                                                                        var todayy = DateTime.Now.ToString("d/M/yyyy");
+
+                                                                    }
+                                                                    @foreach (var PreviousAppointment in Model.PatientIdNavigation.Appointments
+                                                                    .Where(App => App.PatientId == Model.PatientId && App.AppointmentDate.ToString("d/M/yyyy") != todayy && App.AppointmentState == AppointmentStates.treated))
+                                                                    {
+
+                                                                        <tr class="text-center">
+
+                                                                            <td class="text-center">
+                                                                                @Html.DisplayFor(modelItem => @PreviousAppointment.AppointmentId)
+                                                                            </td>
+
+                                                                            <td class="text-center">
+                                                                                @{
+                                                                                    var Date = PreviousAppointment.AppointmentDate.ToString("d/M/yyyy");
+                                                                                }
+                                                                                <label class="badge badge-primary-soft">
+                                                                                    <i class="far fa-calendar-check"></i> @Html.DisplayFor(modelItem => Date)
+
+                                                                                </label>
+                                                                            </td>
+
+                                                                            <td>
+                                                                                @*-@PreviousAppointment.AppointmentId*@
+                                                                                <a href="#" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#DetailsModal-@PreviousAppointment.AppointmentId">
+                                                                                    <i class="fa-solid fa-eye fa-lg"></i>
+                                                                                </a>
+                                                                            </td>
+                                                                            <div class="modal fade bd-example-modal-lg" id="DetailsModal-@PreviousAppointment.AppointmentId" tabindex="-1" role="dialog" aria-labelledby="DetailsModalLabel" aria-hidden="true">
+                                                                                <div class="modal-dialog modal-lg" role="document">
+                                                                                    <div class="modal-content">
+                                                                                        <div class="modal-header">
+                                                                                            <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-person-circle-question fa-2xl"></i> Patient History</h5>
+                                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                                <span aria-hidden="true">&times;</span>
+                                                                                            </button>
+                                                                                        </div>
+                                                                                        <div class="modal-body">
+                                                                                            <div class="col-md-12 col-sm-6">
+                                                                                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                                                                                    <li class="nav-item" role="presentation">
+                                                                                                        <a class="nav-link active" id="profile-tab-@PreviousAppointment.AppointmentId" data-toggle="tab" href="#profile2-@PreviousAppointment.AppointmentId" role="tab" aria-controls="profile2-@PreviousAppointment.AppointmentId" aria-selected="true"><i class="fa-solid fa-heart-pulse"></i> Patient Vitals</a>
+                                                                                                    </li>
+                                                                                                    <li class="nav-item" role="presentation">
+                                                                                                        <a class="nav-link" id="profile-tab-@PreviousAppointment.AppointmentId" data-toggle="tab" href="#comments-@PreviousAppointment.AppointmentId" role="tab" aria-controls="profile2-@PreviousAppointment.AppointmentId" aria-selected="true"><i class="fa-regular fa-message"></i> Diagnosis</a>
+                                                                                                    </li>
+                                                                                                    <li class="nav-item" role="presentation">
+                                                                                                        <a class="nav-link" id="documents-tab-@PreviousAppointment.AppointmentId" data-toggle="tab" href="#documents2-@PreviousAppointment.AppointmentId" role="tab" aria-controls="documents2-@PreviousAppointment.AppointmentId" aria-selected="false"><i class="fa-solid fa-flask-vial"></i> Lab Orders</a>
+                                                                                                    </li>
+                                                                                                    <li class="nav-item" role="presentation">
+                                                                                                        <a class="nav-link" id="documents-tab-@PreviousAppointment.AppointmentId" data-toggle="tab" href="#rad-@PreviousAppointment.AppointmentId" role="tab" aria-controls="documents2-@PreviousAppointment.AppointmentId" aria-selected="false"><i class="fa-solid fa-x-ray"></i> Rad Orders</a>
+                                                                                                    </li>
+                                                                                                    <li class="nav-item" role="presentation">
+                                                                                                        <a class="nav-link" id="documents-tab-@PreviousAppointment.AppointmentId" data-toggle="tab" href="#med-@PreviousAppointment.AppointmentId" role="tab" aria-controls="documents2-@PreviousAppointment.AppointmentId" aria-selected="false"><i class="fa-solid fa-pills"></i> Medicine</a>
+                                                                                                    </li>
+
+                                                                                                </ul>
+
+                                                                                                <div class="tab-content" id="myTabContent">
+                                                                                                    <div class="tab-pane fade show active" id="profile2-@PreviousAppointment.AppointmentId" role="tabpanel" aria-labelledby="profile-tab-@PreviousAppointment.AppointmentId">
+                                                                                                        <div class="row my-4">
+                                                                                                            <div class="col">
+                                                                                                                @foreach (var Vitals in @PreviousAppointment.PatientVitals)
+                                                                                                                {
+                                                                                                                    <div class="form-row">
+                                                                                                                        <div class="form-group col-md-6">
+                                                                                                                            <span><i class="fa-solid fa-temperature-arrow-down"></i> BloodPressure : </span>
+                                                                                                                            <label class="badge badge-primary-soft">
+                                                                                                                                @Vitals.BloodPressure
+                                                                                                                            </label>
+                                                                                                                        </div>
+                                                                                                                        <div class="form-group col-md-6">
+                                                                                                                            <span><i class="fa-solid fa-temperature-low"></i> Temperature : </span>
+                                                                                                                            <label class="badge badge-primary-soft">
+                                                                                                                                @Vitals.Temperature
+                                                                                                                            </label>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div class="form-row">
+                                                                                                                        <div class="form-group col-md-6">
+                                                                                                                            <span><i class="fa-solid fa-arrow-up-a-z"></i> BloodType : </span>
+                                                                                                                            <label class="badge badge-primary-soft">
+                                                                                                                                @Vitals.BloodType
+                                                                                                                            </label>
+                                                                                                                        </div>
+                                                                                                                        <div class="form-group col-md-6">
+                                                                                                                            <span><i class="fa-solid fa-heart-pulse"></i> HeartRate : </span>
+                                                                                                                            <label class="badge badge-primary-soft">
+                                                                                                                                @Vitals.HeartRate
+                                                                                                                            </label>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div class="form-row">
+
+                                                                                                                        <div class="form-group col-md-6">
+                                                                                                                            <span><i class="fa-solid fa-text-height"></i> Height : </span>
+                                                                                                                            <label class="badge badge-primary-soft">
+                                                                                                                                @Vitals.Height
+                                                                                                                            </label>
+                                                                                                                        </div>
+                                                                                                                        <div class="form-group col-md-6">
+                                                                                                                            <span><i class="fa-solid fa-weight-scale"></i> Weight : </span>
+                                                                                                                            <label class="badge badge-primary-soft">
+                                                                                                                                @Vitals.Weight
+                                                                                                                            </label>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div class="form-row">
+                                                                                                                        <div class="form-group col-md-6">
+                                                                                                                            <span><i class="fa-solid fa-comment"></i> PatientComment : </span>
+                                                                                                                            <label class="badge badge-primary-soft">
+                                                                                                                                @Vitals.PatientComment
+                                                                                                                            </label>
+                                                                                                                        </div>
+                                                                                                                    </div>
+
+                                                                                                                }
+
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="tab-pane fade" id="documents2-@PreviousAppointment.AppointmentId" role="tabpanel" aria-labelledby="documents-tab-@PreviousAppointment.AppointmentId">
+                                                                                                        <div class="row my-4">
+                                                                                                            <div class="col">
+                                                                                                                @foreach (var LabTest in @PreviousAppointment.LaboratoryOrders)
+                                                                                                                {
+                                                                                                                    <div class="form-row">
+
+                                                                                                                        <div class="form-group col-md-6">
+                                                                                                                            <span><i class="fa-solid fa-vial"></i> Lab Name : </span>
+                                                                                                                            <label class="badge badge-primary-soft">
+                                                                                                                                @LabTest.LaboratoryTypeIdNavigation.LabName
+                                                                                                                            </label>
+                                                                                                                        </div>
+                                                                                                                    @*    <div class="form-group col-md-5">
+                                                                                                                            <span><i class="fa-solid fa-clock"></i> Lab - Request Date : </span>
+                                                                                                                            <label class="badge badge-primary-soft">
+                                                                                                                                @foreach (var LabDate in @LabTest.LaboratoryTypeIdNavigation.LaboratoryRecords)
+                                                                                                                                {
+                                                                                                                                    @LabDate.LabRecordsDate.ToString("d/M/yyyy")
+                                                                                                                                }
+                                                                                                                            </label>
+                                                                                                                        </div>*@
+                                                                                                                       
+                                                                                                                    </div>
+                                                                                                                }
+                                                                                                                <div class="form-group col-md-3">
+                                                                                                                    @{var labrec = UnitOfWork.LaboratoryRecordRepository.GetAllLabRecords().Where(c => c.AppointmentId == PreviousAppointment.AppointmentId).SingleOrDefault();}
+                                                                                                                    @if (labrec != null)
+                                                                                                                    {
+                                                                                                                        <a asp-action="Pdf" asp-route-pdfFile="@labrec.LabResult" asp-controller="LabRequest" class="btn btn-success">View Result</a>
+                                                                                                                    }
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="tab-pane fade" id="rad-@PreviousAppointment.AppointmentId" role="tabpanel" aria-labelledby="documents-tab-@PreviousAppointment.AppointmentId">
+                                                                                                        <div class="row my-4">
+                                                                                                            <div class="col">
+                                                                                                                @foreach (var RadTest in @PreviousAppointment.RadiologyOrders)
+                                                                                                                {
+                                                                                                                    <div class="form-row">
+                                                                                                                        <div class="form-group col-md-6">
+                                                                                                                            <span><i class="fa-solid fa-x-ray"></i> Radiology Name : </span>
+                                                                                                                            <label class="badge badge-primary-soft">
+                                                                                                                                @RadTest.RadiologyTypeIdNavigation.RadiologyName
+                                                                                                                            </label>
+                                                                                                                        </div>
+                                                                                                                        @*  <div class="form-group col-md-6">
+                                                                                                                            <span><i class="fa-solid fa-clock"></i> Radiology - Request Date : </span>
+                                                                                                                          <label class="badge badge-primary-soft">
+                                                                                                                                @foreach (var RadDate in @RadTest.RadiologyTypeIdNavigation.RadiologyRecords)
+                                                                                                                                {
+                                                                                                                                    @RadDate.RadiologyRecordDate.ToString("d/M/yyyy")
+                                                                                                                                }
+                                                                                                                            </label>
+                                                                                                                        </div>*@
+                                                                                                                    </div>
+                                                                                                                }
+                                                                                                                <div class="form-group col-md-3">
+                                                                                                                    @{
+                                                                                                                        var Radrec = UnitOfWork.RadiologyRecordRepository.GetAllRadiologyRecord().Where(c => c.AppointmentId == PreviousAppointment.AppointmentId).SingleOrDefault();
+                                                                                                                    }
+                                                                                                                    @if (Radrec != null)
+                                                                                                                    {
+                                                                                                                        <a asp-action="Pdf" asp-route-pdfFile="@Radrec.RadioResult" asp-controller="RadRequest" class="btn btn-success">View Result</a>
+                                                                                                                    }
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="tab-pane fade" id="med-@PreviousAppointment.AppointmentId" role="tabpanel" aria-labelledby="documents-tab-@PreviousAppointment.AppointmentId">
+                                                                                                        <div class="row my-4">
+                                                                                                            <div class="col">
+                                                                                                                @foreach (var Med in @PreviousAppointment.MedicineOrders)
+                                                                                                                {
+                                                                                                                    <div class="form-row">
+                                                                                                                        <div class="form-group col-md-6">
+                                                                                                                            <span><i class="fa-solid fa-pills"></i> Medicine Name : </span>
+                                                                                                                            <label class="badge badge-primary-soft">
+                                                                                                                                @Med.MedicineIdNavigation.MedicineName
+                                                                                                                            </label>
+                                                                                                                        </div>
+                                                                                                                        <div class="form-group col-md-6">
+                                                                                                                            <span><i class="fa-solid fa-capsules"></i> Dose : </span>
+                                                                                                                            <label class="badge badge-primary-soft">
+                                                                                                                                @foreach (var Dose in Med.MedicineIdNavigation.MedicineOrders)
+                                                                                                                                {
+                                                                                                                                    @Dose.DosageIdNavigation.DosageName
+                                                                                                                                }
+                                                                                                                            </label>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                }
+
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="tab-pane fade" id="comments-@PreviousAppointment.AppointmentId" role="tabpanel" aria-labelledby="documents-tab-@PreviousAppointment.AppointmentId">
+                                                                                                        <div class="row my-4">
+                                                                                                            <div class="col">
+
+                                                                                                                <div class="form-row">
+                                                                                                                    <div class="form-group col-md-6">
+                                                                                                                        <span><i class="fa-solid fa-stethoscope"></i> Doctor Diagnosis : </span>
+                                                                                                                        <label class="badge badge-primary-soft">
+                                                                                                                            @PreviousAppointment.ExaminationComment
+                                                                                                                        </label>
+                                                                                                                    </div>
+
+                                                                                                                </div>
+
+
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </tr>
+
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                            <!-- end card -->
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <hr />
+
+                                                <div class="tab-pane fade show active" id="documents" role="tabpanel" aria-labelledby="documents-tab">
+                                                    <div class="container-fluid">
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-md-12">
+                                                                <div class="card shadow mb-4">
+                                                                    <div class="card-header py-3">
+                                                                        <h5 class="text-primary fw-bold"><i class="fa-solid fa-heart-pulse fa-fade"></i> Vitals</h5>
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <div class="mb-3">
+
+                                                                            <table class="table mt-3">
+                                                                                <tbody>
+                                                                                    <tr class="text-center">
+                                                                                        <th>
+                                                                                            <i class="fa-solid fa-temperature-arrow-down"></i> BloodP.
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <label><i class="fa-solid fa-temperature-low"></i> Temperature</label>
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <label><i class="fa-solid fa-arrow-up-a-z"></i> BloodType</label>
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <label><i class="fa-solid fa-heart-pulse"></i> HeartRate</label>
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <label><i class="fa-solid fa-text-height"></i> Height</label>
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <label><i class="fa-solid fa-weight-scale"></i> Weight</label>
+                                                                                        </th>
+                                                                                    </tr>
+
+                                                                                    @{
+                                                                                        var vital = Model.PatientVitals.Where(app => app.AppointmentId == Model.AppointmentId).FirstOrDefault();
+                                                                                    }
+
+                                                                                    @if (vital != null)
+                                                                                    {
+                                                                                        <tr>
+                                                                                            <td class="text-center">
+                                                                                                <label class="badge badge-primary-soft"> @Html.DisplayFor(modelItem => vital.BloodPressure)</label>
+                                                                                            </td>
+                                                                                            <td class="text-center">
+                                                                                                <label class="badge badge-primary-soft">@Html.DisplayFor(modelItem => vital.BloodType)</label>
+                                                                                            </td>
+                                                                                            <td class="text-center">
+                                                                                                <label class="badge badge-primary-soft"> @Html.DisplayFor(modelItem => vital.HeartRate)</label>
+                                                                                            </td>
+                                                                                            <td class="text-center">
+                                                                                                <label class="badge badge-primary-soft"> @Html.DisplayFor(modelItem => vital.Temperature)</label>
+                                                                                            </td>
+                                                                                            <td class="text-center">
+                                                                                                <label class="badge badge-primary-soft"> @Html.DisplayFor(modelItem => vital.Height)</label>
+                                                                                            </td>
+                                                                                            <td class="text-center">
+                                                                                                <label class="badge badge-primary-soft"> @Html.DisplayFor(modelItem => vital.Weight)</label>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <tr>
+                                                                                            <td colspan="4" class="text-center">
+                                                                                                <img src="~/imgs/rest.png" width="200">
+                                                                                                <br>
+                                                                                                <br>
+                                                                                                <b class="text-muted"> No Lab Records Found </b>
+                                                                                            </td>
+                                                                                        </tr>
+
+                                                                                    }
+
+
+                                                                                </tbody>
+                                                                            </table>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="container-fluid">
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-md-12">
+                                                                <div class="card shadow mb-4">
+                                                                    <div class="card-header py-3">
+                                                                        <h5 class="text-primary fw-bold "> <i class="fa-solid fa-capsules fa-fade"></i> Medicine Orders - No# @UnitOfWork.MedicineOrderRepository.GetAllMedicineOrders().Where(lo=>lo.AppointmentId == Model.AppointmentId).ToList().Count</h5>
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <div class="mb-3">
+
+                                                                            <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#Medicines">
+                                                                                Add Medicine Order
+                                                                            </button>
+                                                                            @if (UnitOfWork.MedicineOrderRepository.GetAllMedicineOrders().Where(ro => ro.AppointmentId == Model.AppointmentId).ToList().Count > 0)
+                                                                            {
+                                                                                <button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#MedicineOrderEdit">
+                                                                                    View Medicine Orders
+                                                                                </button>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="container-fluid">
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-md-12">
+                                                                <div class="card shadow mb-4">
+                                                                    <div class="card-header py-3">
+                                                                        <h5 class="text-primary fw-bold"> <i class="fa-solid fa-flask fa-fade"></i> Lab Orders - No# @UnitOfWork.LaboratoryOrderRepository.GetAllLaboratoryOrders().Where(lo=>lo.AppointmentId == Model.AppointmentId).ToList().Count</h5>
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <div class="mb-3">
+                                                                            @if (UnitOfWork.LaboratoryOrderRepository.GetAllLaboratoryOrders().Where(ro => ro.AppointmentId == Model.AppointmentId).ToList().Count == 0)
+                                                                            {
+                                                                                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#LabTests">
+                                                                                    Add Lab Tests
+                                                                                </button>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#LabTestsEdit">
+                                                                                    Edit Lab Tests
+                                                                                </button>
+
+                                                                                <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#LabOrdersModal" data-appid="@Model.AppointmentId">
+                                                                                    View Lab Tests
+                                                                                </button>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="container-fluid">
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-md-12">
+                                                                <div class="card shadow mb-4">
+
+                                                                    <div class="card-header py-3">
+                                                                        <h5 class="text-primary fw-bold"> <i class="fa-solid fa-x-ray fa-fade"></i> Radiology Orders - No# @UnitOfWork.RadiologyOrderRepository.GetAllRadiologyOrders().Where(lo=>lo.AppointmentId == Model.AppointmentId).ToList().Count</h5>
+                                                                    </div>
+                                                                    <div class="card-body">
+
+                                                                        <div class="mb-3">
+                                                                            @if (UnitOfWork.RadiologyOrderRepository.GetAllRadiologyOrders().Where(ro => ro.AppointmentId == Model.AppointmentId).ToList().Count == 0)
+                                                                            {
+                                                                                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#Radiologies">
+                                                                                    Add Radiology Order
+                                                                                </button>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#RadiologyOrderEdit">
+                                                                                    Edit Radiology Orders
+                                                                                </button>
+
+                                                                                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#RadiologyOrdersModal" data-appid="@Model.AppointmentId">
+                                                                                    View Radiology Orders
+                                                                                </button>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="container-fluid">
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-md-12">
+                                                                <div class="card shadow mb-4">
+                                                                    <div class="card-header py-3">
+                                                                        <h5 class="text-primary fw-bold"> <i class="fa-solid fa-stethoscope fa-fade"></i> Diagnosis</h5>
+                                                                    </div>
+                                                                    <div class="card-body">
+
+                                                                        <div class="mb-3">
+                                                                            <form asp-action="AppointmentPatientDiagnosis" asp-controller="Appointment" asp-area="Client">
+                                                                                <div class="mb-3">
+                                                                                    @{
+                                                                                        var appComment = UnitOfWork.AppointmentRepository.GetAppointmentById(Model.AppointmentId).ExaminationComment;
+                                                                                    }
+                                                                                    <textarea  name="Diagnosis" class="form-control" rows="2">@(appComment != null ? appComment : "")</textarea>
+                                                                                    <input type="hidden" value="@Model.AppointmentId" name="AppointmentId">
+
+                                                                                </div>
+                                                                                <button type="submit" class="btn btn-outline-primary w-lg mt-2 px-4">Save</button>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*Create Lab Oreder*@
+<div class="modal fade" id="LabTests" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Lab Tests</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="AppointmentPatientLabOrders" asp-controller="LaboratoryOrder">
+                <input type="hidden" value="@Model.AppointmentId" name="AppointmentId">
+                <input type="hidden" value="@Model.AppointmentId" name="is">
+
+                <div class="modal-body d-flex flex-wrap">
+                    @foreach (var lab in (List<LaboratoryType>)ViewBag.LabTests)
+                    {
+                        var id = lab.LabTypeId * 2;
+                        <div class="form-check me-5">
+                            <input class="form-check-input" type="checkbox" value="@lab.LabTypeId" name="ListofOrders" id="@lab.LabName-id">
+                            <label class="form-check-label" for="@lab.LabName-id">
+                                @lab.LabName
+                            </label>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*Create radiology Oreder*@
+<div class="modal fade" id="Radiologies" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Radiology Tests</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="AppointmentPatientRadiologyOrders" asp-controller="RadiologyOrder">
+                <input type="hidden" value="@Model.AppointmentId" name="AppointmentId">
+                <div class="modal-body d-flex flex-wrap">
+                    @foreach (var radiology in (List<RadiologyType>)ViewBag.Radiologies)
+                    {
+                        var id = radiology.RadiologyTypeId * 2;
+                        <div class="form-check me-5">
+                            <input class="form-check-input" type="checkbox" value="@radiology.RadiologyTypeId" name="ListofOrders" id="@radiology.RadiologyName-id">
+                            <label class="form-check-label" for="@radiology.RadiologyName-id">
+                                @radiology.RadiologyName
+                            </label>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*Create Medicine Oreder*@
+<div class="modal fade" id="Medicines" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Medicines Orders</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="AppointmentPatientMedicineOrders" asp-controller="MedicineOrder">
+                <input type="hidden" value="@Model.AppointmentId" name="AppointmentId">
+                <div class="modal-body ">
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label class="control-label">Medicine</label>
+                        <select name="MedicineId" class="form-control" asp-items="ViewBag.Medicines" required></select>
+                    </div>
+                    <div>
+                        <div class="form-group w-75">
+                            <label class="control-label">Dosage</label>
+                            <div class="d-flex align-items-center justify-content-evenly">
+                                <select name="DosageId" class="form-control w-75" asp-items="ViewBag.Dosages" required>
+                                </select>
+                                | <a title="add dosage" asp-action="Create" asp-controller="Dosage"><i class="fa-solid fa-circle-plus ms-2 text-success fa-lg"></i></a>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" value="@Model.AppointmentId" name="AppointmentId">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Instructions</label>
+                        <textarea name="Instructions" class="form-control" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@* Edit Lab Oreder*@
+<div class="modal fade" id="LabTestsEdit" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Lab Tests</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="AppointmentPatientLabOrdersEdit" asp-controller="LaboratoryOrder">
+                <input type="hidden" value="@Model.AppointmentId" name="AppointmentId">
+                <div class="modal-body d-flex flex-wrap">
+                    @foreach (var lab in (List<LaboratoryType>)ViewBag.LabTests)
+                    {
+                        var appLabs = Model.LaboratoryOrders.Select(lo => lo.LabTypeId);
+                        var id = lab.LabTypeId * 2;
+                        <div class="form-check me-5">
+                            <input class="form-check-input" type="checkbox" value="@lab.LabTypeId" name="ListofOrders" id="@lab.LabName-id" @(appLabs.Contains(lab.LabTypeId) ? "checked" : "")>
+                            <label class="form-check-label" for="@lab.LabName-id">
+                                @lab.LabName
+                            </label>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@* Edit Radiology Oreder*@
+<div class="modal fade" id="RadiologyOrderEdit" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Lab Tests</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="AppointmentPatientRadiologyOrdersEdit" asp-controller="RadiologyOrder">
+                <input type="hidden" value="@Model.AppointmentId" name="AppointmentId">
+                <div class="modal-body d-flex flex-wrap">
+                    @foreach (var radiology in (List<RadiologyType>)ViewBag.Radiologies)
+                    {
+                        var appOrders = Model.RadiologyOrders.Select(lo => lo.RadiologyTypeId);
+                        var id = radiology.RadiologyTypeId * 2;
+                        <div class="form-check me-5">
+                            <input class="form-check-input" type="checkbox" value="@radiology.RadiologyTypeId" name="ListofOrders" id="@radiology.RadiologyName-id" @(appOrders.Contains(radiology.RadiologyTypeId) ? "checked" : "")>
+                            <label class="form-check-label" for="@radiology.RadiologyName-id">
+                                @radiology.RadiologyName
+                            </label>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@* Edit Medicine Oreder*@
+<div class="modal fade" id="MedicineOrderEdit" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Medicines Orders</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Medicine Name</th>
+                            <th scope="col">Dosage</th>
+                            <th scope="col">Instructions</th>
+                            <th scope="col">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var counter = 0;
+                        }
+                        @foreach (var medicine in Model.MedicineOrders)
+                        {
+                            counter++;
+                            <tr>
+                                <th scope="row">@counter</th>
+                                <td>@medicine.MedicineIdNavigation.MedicineName</td>
+                                <td><span class="badge bg-success">@medicine.DosageIdNavigation.DosageName</span></td>
+                                <td>@medicine.Instructions</td>
+                                <td><a asp-action="DoctorDelete" asp-route-id="@medicine.MedicineOrderId" asp-controller="MedicineOrder" class="btn btn-outline-danger"><i class="fa-solid fa-ban "></i></a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*Views Lab Oreder*@
+<div class="modal fade" id="LabOrdersModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+@*Views Radiology Oreder*@
+<div class="modal fade" id="RadiologyOrdersModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+@*Views Medicine Oreder*@
+<div class="modal fade" id="MedicnesModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="MarkTreatedModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Finish Examiation Confirmation</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you want to mark this appoitment as treated ?
+            </div>
+            <div class="modal-footer">
+                <a asp-action="MarkAsTreated" asp-controller="Appointment" asp-area="Client" asp-route-id="@Model.AppointmentId" class="btn btn-danger">Yes,Mark it!</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        $('#LabOrdersModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var appointmentId = button.data('appid');
+            var modal = $(this);
+            $.ajax({
+                url: '@Url.Action("GetLabOrders", "Appointment",new { area = "Client" })',
+                data: { id: appointmentId },
+                type: 'GET',
+                cache: false,
+                success: function (result) {
+                    modal.find('.modal-content').html(result);
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        $('#RadiologyOrdersModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var appointmentId = button.data('appid');
+            var modal = $(this);
+            $.ajax({
+                url: '@Url.Action("GetRadiologyOrders", "Appointment",new { area = "Client" })',
+                data: { id: appointmentId },
+                type: 'GET',
+                cache: false,
+                success: function (result) {
+                    modal.find('.modal-content').html(result);
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        });
+    });
+
+
+</script>

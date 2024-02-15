@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Clinc_Care_MVC_Grad_PROJ.Areas.Managment.Models.RadiologyRecord>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RadiologyRecordId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RadioResult)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RadiologyRecordDate)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.PatientIdNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RadiologyTypeIdNavigation)
+            </th>*@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RadiologyRecordId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RadioResult)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RadiologyRecordDate)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.PatientIdNavigation.PatientEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RadiologyTypeIdNavigation.RadiologyName)
+            </td>*@
+            <td>
+                    <a asp-action="Edit" asp-route-id="@item.RadiologyRecordId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.RadiologyRecordId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.RadiologyRecordId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

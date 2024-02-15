@@ -1,0 +1,20 @@
+﻿@model Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models.Appointment
+
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-circle-info"></i> Appointment Details</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <p><strong>Appointment ID:</strong> <label class="badge badge-primary-soft"> @Model.AppointmentId</label></p>
+    <p><strong>Appointment Date:</strong> <label class="badge badge-primary-soft"> @Model.CreatedAppointmentDate.ToString("dd MMM yyyy")</label></p>
+    <p><strong>Patient Name:</strong> <label class="badge badge-primary-soft"> @Model.PatientIdNavigation.PatientFullName</label></p>
+    <p><strong>Patient Phone:</strong> <label class="badge badge-primary-soft"> @Model.PatientIdNavigation.PatientPhone</label></p>
+    <p>Do you want to confirm or cancel this appointment?</p>
+</div>
+
+<div class="modal-footer">
+
+    <a asp-action="Update" asp-area="Client" asp-controller="Appointment" asp-route-id="@Model.AppointmentId" class="btn btn-outline-primary btn-md"> <i class="fa-solid fa-check-double"></i> Confirm Appointment</a>
+
+</div>

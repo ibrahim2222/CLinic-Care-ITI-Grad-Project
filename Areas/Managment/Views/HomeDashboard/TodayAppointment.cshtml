@@ -1,0 +1,335 @@
+﻿@model IEnumerable<Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models.Appointment>
+@namespace Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models
+@inject Clinc_Care_MVC_Grad_PROJ.Models.UnitOfWork.IUnitOfWork UnitOfWork
+@{
+    ViewData["Title"] = "Index";
+}
+@{
+    Layout = "_Layout2";
+}
+@{
+    var today = DateTime.Now.ToString("yyyy-MM-dd");
+    int totalTodayAppointments = UnitOfWork.AppointmentRepository.GetAllAppointments().Count;
+
+    int QueuedAppointments = UnitOfWork.AppointmentRepository.GetAllAppointments().Where(App => App.AppointmentState == AppointmentStates.queued && App.IsCanceled == false && App.AppointmentDate.ToString("yyyy-MM-dd") == today).ToList().Count; ;
+    int CanceledAppointments = UnitOfWork.AppointmentRepository.GetAllAppointments().Where(app => app.IsCanceled == true).ToList().Count;
+    int TodayAppointments = UnitOfWork.AppointmentRepository.GetAllAppointments().Where(App => App.AppointmentState == AppointmentStates.reserverd && App.IsCanceled == false && App.AppointmentDate.ToString("yyyy-MM-dd") == today).ToList().Count;
+    /* int totalCompletedCheckUps = Model
+     .SelectMany(a => a.PatientIdNavigation.Appointments)
+     .Where(b => b.AppointmentState == AppointmentStates.treated)
+     .Count();*/
+
+
+
+}
+<style>
+    .NoRecordImg {
+        width: 100px;
+    }
+
+    .dataTables_empty {
+        position: relative !important;
+        height: 250px !important;
+        vertical-align: middle !important;
+        font-weight: bold;
+        color: #ddd !important;
+    }
+
+</style>
+
+<div>
+    <h4 class="text-info mb-5">
+        Today's Appointments <span class="badge bg-warning">
+            <i class="far fa-calendar-check"></i> @today
+        </span>
+    </h4>
+</div>
+<div class="row">
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">All Appointments </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@totalTodayAppointments</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fa-solid fa-calendar-days fa-2x"></i>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Today's Appointments </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@TodayAppointments</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fa-solid fa-calendar-day  fa-2x text-black"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-danger shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Canceled Appointments</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            @CanceledAppointments
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fa-solid fa-user-xmark fa-2x"></i>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Confirmed Appointments</div>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">@QueuedAppointments</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fa-solid fa-calendar-check fa-2x text-black-300" " ></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row g-2">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <div class="row">
+                    <div class="col-8">
+                        <h6 class="m-0 font-weight-bold text-primary w-75 p-2 d-flex align-items-center">
+                            <i class="fa-solid fa-calendar-day fa-2x fa-bounce"></i>
+                            <span class="ms-2">Today's Appointments </span>
+
+                        </h6>
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="dataTable01" width="100%">
+                        <thead class="text-center">
+                            <tr>
+                                <th class="align-middle text-center">
+                                    <label>ID</label>
+                                </th>
+                                <th class="align-middle text-center">
+                                    <label>Patient Name</label>
+                                </th>
+                                <th class="align-middle text-center">
+                                    <label>Specialization</label>
+                                </th>
+                                <th class="align-middle text-center">
+                                    <label><i class="fas fa-cog fa-spin"></i> Action </label>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @{
+                            int counter = 0;
+                            var listApps = Model.Where(App => App.AppointmentState == AppointmentStates.reserverd && App.IsCanceled == false && App.AppointmentDate.ToString("yyyy-MM-dd") == today);
+                        }
+
+                        @foreach (var item in listApps)
+                        {
+                            counter++;
+                                <tr>
+
+                                    <td class="text-center align-middle">
+                                    @counter
+                                    </td>
+                                    <td class="text-center align-middle">
+
+                                    @Html.DisplayFor(modelItem => item.PatientIdNavigation.PatientFullName)
+
+                                    </td>
+
+                                    <td class="text-center align-middle">
+                                        <label class="badge badge-primary-soft">
+                                            <i class="fa-solid fa-heart-pulse fa-beat"></i>  @if (item.DoctorIdNavigation.IsDeleted == false)
+                                        {
+                                            @Html.DisplayFor(modelItem =>
+                                        item.DoctorIdNavigation.EmpDoctorSpecilzations.FirstOrDefault().DoctorSpecilzationIdNavigation.SpecializationName )
+                                        }
+                                        else
+                                        {
+                                            @Html.DisplayFor(modelItem =>
+                                        item.DoctorIdNavigation.DeletedEmpDoctorSpecilzations.FirstOrDefault().DoctorSpecilzationIdNavigation.SpecializationName )
+                                        }
+                                        </label>
+                                    </td>
+                                    <td class="text-center align-middle">
+
+                                        <a href="#" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#TodayModal" data-appid="@item.AppointmentId">
+                                            <i class="fa-solid fa-eye fa-lg"></i>
+                                        </a>
+                                        <a href="#" class="btn btn-outline-danger btn-sm open-CancelModal" data-toggle="modal" data-target="#CancelModal" data-appid="@item.AppointmentId">
+                                            <i class="fa-solid fa-ban"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                        }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <div class="row">
+                    <div class="col-8">
+                        <h6 class="m-0 font-weight-bold text-primary w-75 p-2 d-flex align-items-center">
+                            <i class="fas fa-spinner fa-pulse fa-2x"></i>
+                            <span class="ms-2"> Queued Appointment    </span>
+                        </h6>
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table table-striped" id="dataTable02" width="100%">
+                        <thead class="text-center">
+                            <tr class="align-middle text-center">
+                                <th class="align-middle text-center">
+                                    <label>ID</label>
+                                </th>
+                                <th class="align-middle text-center">
+                                    <label>Patient Name</label>
+                                </th>
+                                <th class="align-middle text-center">
+                                    <label>Specialization</label>
+                                </th>
+                                <th class="align-middle text-center"><label><i class="fas fa-cog fa-spin"></i> Action </label> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model.Where(App => App.AppointmentState == AppointmentStates.queued && App.IsCanceled == false && App.AppointmentDate.ToString("yyyy-MM-dd") == today))
+                        {
+                                <tr class="align-middle text-center">
+                                    <td class="text-center align-middle">
+                                    @Html.DisplayFor(modelItem => item.AppointmentId)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                    @Html.DisplayFor(modelItem => item.PatientIdNavigation.PatientFullName)
+                                    </td>
+
+                                    <td class="text-center align-middle">
+                                        <label class="badge badge-primary-soft">
+                                            <i class="fa-solid fa-heart-pulse fa-beat"></i>  @if (item.DoctorIdNavigation.IsDeleted == false)
+                                        {
+                                            @Html.DisplayFor(modelItem =>
+                                        item.DoctorIdNavigation.EmpDoctorSpecilzations.FirstOrDefault().DoctorSpecilzationIdNavigation.SpecializationName )
+                                        }
+                                        else
+                                        {
+                                            @Html.DisplayFor(modelItem =>
+                                        item.DoctorIdNavigation.DeletedEmpDoctorSpecilzations.FirstOrDefault().DoctorSpecilzationIdNavigation.SpecializationName )
+                                        }
+                                        </label>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <a href="#" class="btn btn-outline-danger btn-sm open-CancelModal" data-toggle="modal" data-target="#CancelModal" data-appid="@item.AppointmentId">
+                                            <i class="fa-solid fa-ban"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="TodayModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="CancelModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Cancel Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want Cancel this appointment ?
+            </div>
+            <div class="modal-footer">
+                <a id="AppId" type="button" class="btn btn-outline-danger">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#TodayModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var appointmentId = button.data('appid');
+            var modal = $(this);
+            $.ajax({
+                url: '@Url.Action("ConfirmAppointmentsDetails", "Appointment",new { area = "Client" })',
+                data: { id: appointmentId },
+                type: 'GET',
+                cache: false,
+                success: function (result) {
+                    modal.find('.modal-content').html(result);
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        $('#dataTable01').DataTable();
+    });
+    $(document).ready(function () {
+        $('#dataTable02').DataTable();
+    });
+    $(document).on("click", ".open-CancelModal", function () {
+        var myAppId = "/Client/Appointment/Delete/" + $(this).data('appid');
+        $("#AppId").attr('href', myAppId);
+    });
+</script>

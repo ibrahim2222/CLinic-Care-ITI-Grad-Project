@@ -1,0 +1,104 @@
+﻿@using Clinc_Care_MVC_Grad_PROJ.Areas.Managment.Models;
+@model IEnumerable<Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models.Patient>
+@{
+    ViewData["Title"] = "Index";
+}
+@{
+    Layout = "_Layout2";
+}
+
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <div class="row">
+                    <div class="col-8">
+                        <h6 class="m-0 font-weight-bold text-primary w-75 p-2">
+                            <i class="fa-solid fa-rectangle-list fa-2x fa-bounce"></i>
+                            Patient List
+                        </h6>
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="dataTable" width="100%">
+                        <thead class="text-center">
+                            <tr>
+                                <th>
+                                    <label><i class="fa-solid fa-id-card-clip"></i> ID</label>
+                                </th>
+                                <th>
+                                    <label><i class="fa-solid fa-user-tag"></i> Patient Name</label>
+                                </th>
+                              
+                                <th>
+                                    <label><i class="fa-solid fa-phone fa-shake"></i> Phone</label>
+                                </th>
+                                <th>
+                                    <label><i class="fa-solid fa-circle-info"></i> Type</label>
+                                </th>
+                              
+                                <th><i class="fas fa-cog fa-spin"></i> Action </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+
+                                <tr>
+
+                                    <td class="text-center">
+                                        @Html.DisplayFor(modelItem => item.PatientId)
+                                    </td>
+                                    <td class="text-center">
+                                        @Html.DisplayFor(modelItem => item.PatientFullName)
+
+                                    </td>
+                               
+
+                                    <td class="text-center">
+                                        
+                                        @Html.DisplayFor(modelItem => item.PatientPhone)
+                                    </td>
+                                    <td class="text-center">
+                                        <label class="badge badge-warning-soft">
+                                            @if(item.PatientTypeIdNavigation.PatientTypeName == "Online")
+                                            {
+                                                <i class="fa-brands fa-chrome fa-spin fa-xl"></i>
+                                                @Html.DisplayFor(modelItem => item.PatientTypeIdNavigation.PatientTypeName)
+                                            }
+                                            else
+                                            {
+                                                <i class="fa-solid fa-person-walking fa-beat fa-xl"></i>
+                                                @Html.DisplayFor(modelItem => item.PatientTypeIdNavigation.PatientTypeName)
+                                            }
+                                        </label>
+                                    </td>
+                                    
+                                    <td class="text-center">
+
+                                      
+                                        <a asp-action="Details" asp-route-id="@item.PatientId" class="btn btn-outline-primary btn-sm">  <i class="fa-solid fa-eye fa-lg"></i> View</a>
+                                        @if (User.IsInRole("Admin"))
+                                        {
+
+                                            <a asp-action="Block" asp-controller="Patient" asp-area="Client" asp-route-id="@item.PatientId" class="btn btn-outline-dark btn-sm">  <i class="fa-solid fa-ban"></i></a>
+                                        }
+
+                                    </td>
+
+
+                                </tr>
+                             
+                            }
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

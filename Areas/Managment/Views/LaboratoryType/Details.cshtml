@@ -1,0 +1,24 @@
+﻿@model Clinc_Care_MVC_Grad_PROJ.Areas.Managment.Models.LaboratoryType
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>LaboratoryType</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LabName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LabName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.LabTypeId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -1,0 +1,332 @@
+﻿@model Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models.Appointment
+
+@{
+    ViewData["Title"] = "ReadyAppointmentDetails";
+}
+<!-- Add Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+
+
+<h1>Appointment Details</h1>
+
+<br />
+<br />
+<hr />
+<h3>***Patient Details***</h3>
+<table class="table table-bordered">
+    <tr>
+
+        <th style="">Patient First Name:</th>
+        <td style="">@Html.DisplayFor(model => model.PatientIdNavigation.PatientFirstName)</td>
+
+        <th style="">Patient Last Name:</th>
+        <td>@Html.DisplayFor(model => model.PatientIdNavigation.PatientLastName)</td>
+
+        <th style="">Gender:</th>
+        <td>@Html.DisplayFor(model => model.PatientIdNavigation.PatientGender)</td>
+
+        <th style="">Appointment Type:</th>
+        <td>@Html.DisplayFor(model => model.AppointmentTypeIdNavigation.TypeName)</td>
+    </tr>
+</table>
+<h3>***Patient Vitals***</h3>
+
+<table class="table table-bordered table-hover">
+    <tr>
+        <th style="text-align: right;">Patient Temprature</th>
+        <td>
+            @foreach (var Patient in Model.PatientVitals.Where(App => App.AppointmentId == Model.AppointmentId))
+            {
+                <span>@Patient.Temperature</span>
+            }
+        </td>
+        <th style="text-align: right;">Patient Height</th>
+        <td>
+            @foreach (var Patient in Model.PatientVitals.Where(App => App.AppointmentId == Model.AppointmentId))
+            {
+                <span>@Patient.Height</span>
+            }
+        </td>
+        <th style="text-align: right;">Patient Heart Rate</th>
+        <td>
+            @foreach (var Patient in Model.PatientVitals.Where(App => App.AppointmentId == Model.AppointmentId))
+            {
+                <span>@Patient.HeartRate</span>
+            }
+        </td>
+        <th style="text-align: right;">Patient BloodPressure</th>
+        <td>
+            @foreach (var Patient in Model.PatientVitals.Where(App => App.AppointmentId == Model.AppointmentId))
+            {
+                <span>@Patient.BloodPressure</span>
+            }
+        </td>
+        <th style="text-align: right;">Patient Weight</th>
+        <td>
+            @foreach (var Patient in Model.PatientVitals.Where(App => App.AppointmentId == Model.AppointmentId))
+            {
+                <span>@Patient.Weight</span>
+            }
+        </td>
+    </tr>
+    <tr>
+        <th style="text-align: left;">Patient Comments</th>
+        <td>
+            @foreach (var Patient in Model.PatientVitals.Where(App => App.AppointmentId == Model.AppointmentId))
+            {
+                <span>@Patient.PatientComment</span>
+            }
+        </td>
+    </tr>
+</table>
+<h3>***Patient Previous Appointments***</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AppointmentId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PatientIdNavigation.PatientFullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAppointmentDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppointmentTypeIdNavigation.TypeName)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var Appointment in Model.PatientIdNavigation.Appointments.Where(App => App.AppointmentId != Model.AppointmentId))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => Appointment.AppointmentId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => Appointment.PatientIdNavigation.PatientFullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => Appointment.CreatedAppointmentDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => Appointment.AppointmentTypeIdNavigation.TypeName)
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary open-modal-button" data-toggle="modal" data-target="#viewModal-@Appointment.AppointmentId">
+                        View
+                    </button>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<!-- Modal -->
+@foreach (var item in Model.PatientIdNavigation.Appointments)
+{
+    <!-- Modal -->
+    <div class="modal fade" id="viewModal-@item.AppointmentId" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewModalLabel">View Appointment Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <dl class="row">
+                        @foreach (var Vitals in item.PatientVitals)
+                        {
+                            <dt class="col-sm-2">
+                                <span>Temprature</span>
+                            </dt>
+                            <dd class="col-sm-12">
+                                @Html.DisplayFor(modelItem => Vitals.Temperature)
+                            </dd>
+                            <dt class="col-sm-2">
+                                <span>Height</span>
+                            </dt>
+                            <dd class="col-sm-12">
+                                @Html.DisplayFor(modelItem => Vitals.Height)
+                            </dd>
+                            <dt class="col-sm-2">
+                                <span>Heart Rate</span>
+                            </dt>
+                            <dd class="col-sm-12">
+                                @Html.DisplayFor(modelItem => Vitals.HeartRate)
+                            </dd>
+                            <dt class="col-sm-2">
+                                <span>BloodPressure</span>
+                            </dt>
+                            <dd class="col-sm-12">
+                                @Html.DisplayFor(modelItem => Vitals.BloodPressure)
+                            </dd>
+                            <dt class="col-sm-2">
+                                <span>Weight</span>
+                            </dt>
+                            <dd class="col-sm-12">
+                                @Html.DisplayFor(modelItem => Vitals.Weight)
+                            </dd>
+                            <dt class="col-sm-2">
+                                <span>PrevComments</span>
+                            </dt>
+                            <dd class="col-sm-12">
+                                @Html.DisplayFor(modelItem => Vitals.PatientComment)
+                            </dd>
+                        }
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.CreatedAppointmentDate)
+                        </dt>
+                        <dd class="col-sm-12">
+                            @Html.DisplayFor(model => item.CreatedAppointmentDate)
+                        </dd>
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.UpdatedAppointmentDate)
+                        </dt>
+                        <dd class="col-sm-12">
+                            @Html.DisplayFor(model => item.UpdatedAppointmentDate)
+                        </dd>
+                        <dt class="col-sm-2">
+                            @{
+                                var AppointmentType = "";
+                            }
+                            @Html.DisplayNameFor(model => AppointmentType)
+                        </dt>
+                        <dd class="col-sm-12">
+                            @Html.DisplayFor(model => item.AppointmentTypeIdNavigation.TypeName)
+                        </dd>
+                        <dt class="col-sm-2">
+                            @{
+                                var PaymentMethod = "";
+                            }
+                            @Html.DisplayNameFor(model => PaymentMethod)
+                        </dt>
+                        <dd class="col-sm-12">
+                            @Html.DisplayFor(model => item.PaymentMethodIdNavigation.PaymentMethodName)
+                        </dd>
+                        <dt class="col-sm-2">
+                            @{
+                                var PatientType = "";
+                            }
+                            @Html.DisplayNameFor(model => PatientType)
+                        </dt>
+                        <dd class="col-sm-12">
+                            @Html.DisplayFor(model => item.PatientIdNavigation.PatientTypeIdNavigation.PatientTypeName)
+                        </dd>
+                        <dt class="col-sm-2">
+                            @{
+                                var Specialization = "";
+                            }
+                            @Html.DisplayNameFor(model => Specialization)
+                        </dt>
+                        <dd class="col-sm-12">
+                            @if (item.DoctorIdNavigation.IsDeleted == false)
+                            {
+                                @Html.DisplayFor(modelItem =>
+                        item.DoctorIdNavigation.EmpDoctorSpecilzations.SingleOrDefault().DoctorSpecilzationIdNavigation.SpecializationName )
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem =>
+                        item.DoctorIdNavigation.DeletedEmpDoctorSpecilzations.FirstOrDefault().DoctorSpecilzationIdNavigation.SpecializationName )
+                            }
+                        </dd>
+
+
+                        <dt class="col-sm-2">
+
+                            @Html.DisplayNameFor(model => model.LaboratoryOrders)
+                        </dt>
+                        <dd class="col-sm-12">
+
+                            <ul>
+                                @if (item.LaboratoryOrders.Any())
+                                {
+                                    @foreach (var items in item.LaboratoryOrders)
+                                    {
+                                        <li>@items.LaboratoryTypeIdNavigation.LabName</li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li>no Orders Assigned to this Patient Yet!</li>
+                                }
+                            </ul>
+
+                        </dd>
+                        <dt class="col-sm-2">
+
+                            @Html.DisplayNameFor(model => model.RadiologyOrders)
+                        </dt>
+                        <dd class="col-sm-12">
+
+                            <ul>
+                                @if (item.RadiologyOrders.Any())
+                                {
+                                    @foreach (var items in item.RadiologyOrders)
+                                    {
+                                        <li>@items.RadiologyTypeIdNavigation.RadiologyName</li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li>no Orders Assigned to this Patient Yet!</li>
+                                }
+                            </ul>
+
+                        </dd>
+                        <dt class="col-sm-2">
+
+                            @Html.DisplayNameFor(model => model.MedicineOrders)
+                        </dt>
+                        <dd class="col-sm-12">
+
+                            <ul>
+                                @if (item.MedicineOrders.Any())
+                                {
+                                    @foreach (var items in item.MedicineOrders)
+                                    {
+                                        <li>@items.MedicineIdNavigation.MedicineName</li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li>no Orders Assigned to this Patient Yet!</li>
+                                }
+                            </ul>
+
+                        </dd>
+                        @*   <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.IsCanceled)
+                    </dt>
+                    <dd class="col-sm-12">
+                    @if (!item.IsCanceled)
+                    {
+                    <span class="btn-danger rounded-3 bg-success"> Active</span>
+
+                    }
+                    else
+                    {
+                    <span class="btn-danger rounded-3 bg-danger"> Canceled</span>
+                    }
+
+                    </dd>*@
+                    </dl>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

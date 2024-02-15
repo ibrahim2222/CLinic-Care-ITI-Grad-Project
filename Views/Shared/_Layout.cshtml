@@ -1,0 +1,280 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RoShta</title>
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/lib/font-awesome/css/brands.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/main.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/animate.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/frame-work.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/animation.css" asp-append-version="true" />
+    <link rel="icon" type="image/png" href="~/imgs/Logo/Rosheta-logo-ico.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="btn btn-info rounded rounded-circle d-flex align-items-center justify-content-center position-fixed m-5 " id="BackTop">
+        <a href="#home">
+            <i class="fas fa-chevron-up"></i>
+        </a>
+    </div>
+    <header id="home" class="px-5">
+        <div class="logo flex-cntr">
+            <a asp-action="index" asp-controller="Home">
+                <img src="/imgs/Logo/Flex-Logo.png" alt="Rosheta-home-logo">
+            </a>
+        </div>
+        <div class="head-info">
+            <span style=" color: #004ED7; font-size: 1.8rem;">
+                <i class="fas fa-mobile-alt fa-1x"></i>
+            </span>
+            <div>
+                <div>+20-109-941-2326</div>
+                <div>Emergency Line</div>
+            </div>
+        </div>
+        <div class="head-info">
+            <span style=" color: #004ED7; font-size: 1.8rem;">
+                <i class="fas fa-map-marker-alt fa-1x"></i>
+            </span>
+            <div>
+                <div>Salah Salem Road, 383</div>
+                <div>Egypt, Cairo</div>
+            </div>
+        </div>
+        <div class="head-info">
+            <span style=" color: #004ED7; font-size: 2rem;">
+                <i class="far fa-clock fa-1x"></i>
+            </span>
+            <div>
+                <div>Mon-Sat: 8am - 7pm</div>
+                <div>Sunday: Off</div>
+            </div>
+        </div>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="head-btn">
+                <a asp-area="" asp-controller="Account" asp-action="Logout">
+                    Logout
+                    <span style="font-size: 0.8rem ; color:#004ED7">
+                        <i class="fas fa-chevron-right fa-xs"></i>
+                    </span>
+                </a>
+            </div>
+            if (!User.IsInRole("Client"))
+            {
+                <div class="head-btn">
+                    <a asp-area="" asp-controller="Home" asp-action="DbIndex">
+                        Staff only
+                        <span style="font-size: 0.8rem ; color:#004ED7">
+                            <i class="fas fa-chevron-right fa-xs"></i>
+                        </span>
+                    </a>
+                </div>
+            } else
+            {
+                <a asp-action="Profile" asp-area="" asp-controller="Home">
+                    <span class="user-profile p-3 rounded rounded-circle btn btn-outline-primary">
+                        <i class="fa-solid fa-hospital-user fa-lg"></i>
+                    </span>
+                </a>
+            }
+        }
+        else
+        {
+            <div class="head-btn">
+                <a asp-area="" asp-controller="Account" asp-action="Login">
+                    Login / Registere
+                    <span style="font-size: 0.8rem ; color:#004ED7">
+                        <i class="fas fa-chevron-right fa-xs"></i>
+                    </span>
+                </a>
+            </div>
+        }
+
+       
+    </header>
+
+    <nav class="container d-flex align-items-center justify-content-evenly">
+        <a asp-action="index" asp-controller="Home" asp-area="" asp-fragment="home" class="flx-coln-cntr"><span>Home</span><span>Home</span></a>
+        <a asp-action="index" asp-controller="Home" asp-area="" asp-fragment="about" class="flx-coln-cntr"><span>About</span><span>About</span></a>
+        <a asp-action="index" asp-controller="Home" asp-area="" asp-fragment="staff" class="flx-coln-cntr"><span>Our Staff</span><span>Our Staff</span></a>
+        <a asp-action="index" asp-controller="Home" asp-area="" asp-fragment="department" class="flx-coln-cntr"><span>Depatments</span><span>Depatments</span></a>
+        <a asp-action="index" asp-controller="Home" asp-area="" asp-fragment="testimonials" class="flx-coln-cntr"><span>Testimonials</span><span>Testimonials</span></a>
+        <a asp-action="index" asp-controller="Home" asp-area="" asp-fragment="contact" class="flx-coln-cntr"><span>Contact</span><span>Contact</span></a>
+        <a asp-action="index" asp-controller="Home" asp-area="" asp-fragment="Appointment-form" class="flx-coln-cntr"><span>Appointment</span><span>Appointment</span></a>
+
+    </nav>
+
+
+    <div class="">
+        <main role="main" class="">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div>
+            <a href="#home" class="flex-cntr">
+                <span style="font-size: 1rem ;">
+                    <i class="fas fa-chevron-up"></i>
+                </span>
+            </a>
+            <div>
+                <div>
+                    <div class="logo">
+                        <a href="#home">
+                            <img src="~/imgs/Logo/Flex-Logo.png" alt="Rosheta-home-logo">
+                        </a>
+                    </div>
+                    <p>
+                        Cure is a medical theme specializing in health, dental, hospital, clinic, doctors and
+                        veterinary.
+                    </p>
+                </div>
+                <div>
+                    <div>
+                        <div class="flex-cntr">
+                            <span style="font-size: 0.7rem ; color:#3853BC">
+                                <i class="fas fa-phone-alt"></i>
+                            </span>
+                        </div>
+                        <p>Call us: +20-109-941-2326</p>
+                    </div>
+                    <div>
+                        <div class="flex-cntr">
+                            <span style=" color: #3853BC; font-size: 0.7rem;">
+                                <i class="fas fa-map-marker-alt fa-1x"></i>
+                            </span>
+                        </div>
+                        <p>Example Road, 383</p>
+                    </div>
+                    <div>
+                        <div class="flex-cntr">
+                            <span style=" color: #3853BC; font-size: 0.7rem;">
+                                <i class="far fa-clock fa-1x"></i>
+                            </span>
+                        </div>
+                        <p>Mon-Fri: 8am - 7pm, Sunday: Off</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="flx-coln">
+                    <div>
+                        <div>Monday</div>
+                        <div>08:30 - 18:00</div>
+                    </div>
+                    <div>
+                        <div>Tueday</div>
+                        <div>08:30 - 18:00</div>
+                    </div>
+                    <div>
+                        <div>Wednesday</div>
+                        <div>08:30 - 18:00</div>
+                    </div>
+                    <div>
+                        <div>Thursday</div>
+                        <div>08:30 - 18:00</div>
+                    </div>
+                    <div>
+                        <div>Friday</div>
+                        <div>08:30 - 18:00</div>
+                    </div>
+                    <div>
+                        <div>Saturday-Sunday</div>
+                        <div>Off</div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <h3 style="color: #130947 ">Links</h3>
+                    <ul>
+                        <li>
+                            <a href="">
+                                <span style="font-size: 0.7rem ; color:#C8C6D4">
+                                    <i class="fas fa-chevron-right"></i>
+                                </span>Doctor - Patient Relations
+                        </li></a>
+                        <li>
+                            <a href="">
+                                <span style="font-size: 0.7rem ; color:#C8C6D4">
+                                    <i class="fas fa-chevron-right"></i>
+                                </span>Departments
+                        </li></a>
+                        <li>
+                            <a href="">
+                                <span style="font-size: 0.7rem ; color:#C8C6D4">
+                                    <i class="fas fa-chevron-right"></i>
+                                </span>Patirnt Testimonials
+                        </li></a>
+                        <li>
+                            <a href="">
+                                <span style="font-size: 0.7rem ; color:#C8C6D4">
+                                    <i class="fas fa-chevron-right"></i>
+                                </span>Frequently Asked Questions
+                        </li></a>
+                        <li>
+                            <a href="">
+                                <span style="font-size: 0.7rem ; color:#C8C6D4">
+                                    <i class="fas fa-chevron-right"></i>
+                                </span>Privact Policy
+                        </li></a>
+                        <li>
+                            <a href="">
+                                <span style="font-size: 0.7rem ; color:#C8C6D4">
+                                    <i class="fas fa-chevron-right"></i>
+                                </span>Insureance Policy
+                        </li></a>
+                        <li>
+                            <a href="">
+                                <span style="font-size: 0.7rem ; color:#C8C6D4">
+                                    <i class="fas fa-chevron-right"></i>
+                                </span>Contact Us
+                        </li></a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div>2021 - Code125. All Rights Reserved. Designed & Developed by <a href="">ZMAN Team</a></div>
+            <div>
+                <div class="flex-cntr">
+                    <a href="">
+                        <span style="font-size: 1rem ; color:#3B5998">
+                            <i class="fab fa-facebook-f"></i>
+                        </span>
+                    </a>
+                </div>
+                <div class="flex-cntr">
+                    <a href="">
+                        <span style="font-size: 1rem ; color:#1EB0DD">
+                            <i class="fab fa-twitter"></i>
+                        </span>
+                    </a>
+                </div>
+                <div class="flex-cntr">
+                    <a href="">
+                        <span style="font-size: 1rem ; color:#BC2A8D">
+                            <i class="fab fa-instagram"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/font-awesome/js/all.min.js"></script>
+    <script src="~/lib/font-awesome/js/brands.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/main.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

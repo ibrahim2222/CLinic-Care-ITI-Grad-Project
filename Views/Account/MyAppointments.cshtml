@@ -1,0 +1,248 @@
+﻿@model IEnumerable<Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models.Appointment>
+
+@{
+    ViewData["Title"] = "MyAppointments";
+}
+
+<h1>MyAppointments</h1>
+
+
+
+<!-- Include Bootstrap CSS from CDN -->
+@*<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+*@
+<table class="table" border="1">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AppointmentId)
+            </th>
+            <th>
+                @{
+                    var AppointmentType = "";
+                }
+                @Html.DisplayNameFor(model => AppointmentType)
+            </th>
+            <th>
+                @{
+                    var Specialization = "";
+                }
+                @Html.DisplayNameFor(model => Specialization)
+            </th>
+            <th>
+                @{
+                    var Status = "";
+                }
+                @Html.DisplayNameFor(model => Status)
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AppointmentId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AppointmentTypeIdNavigation.TypeName)
+                </td>
+                <td>
+                    @if (item.DoctorIdNavigation.IsDeleted == false)
+                    {
+                        @Html.DisplayFor(modelItem =>
+                item.DoctorIdNavigation.EmpDoctorSpecilzations.FirstOrDefault().DoctorSpecilzationIdNavigation.SpecializationName )
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem =>
+                item.DoctorIdNavigation.DeletedEmpDoctorSpecilzations.FirstOrDefault().DoctorSpecilzationIdNavigation.SpecializationName )
+                    }
+                </td>
+                <td>
+                    <label>
+                        @if (item.IsCanceled)
+                        {
+                            <span class="btn btn-danger rounded-3">Canceled</span>
+                        }
+                        else
+                        {
+                            <span class="btn btn-success rounded-3">Active</span>
+                        }
+                    </label>
+                </td>
+                <td>
+                    <a href="#" data-toggle="modal" data-target="#viewModal-@item.AppointmentId" class="btn btn-warning">Details</a>
+                    @if (!item.IsCanceled)
+                    {
+                        <a asp-action="CancelAppointment" class="btn btn-danger" asp-route-id="@item.AppointmentId">Delete</a>
+                    }
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@foreach (var item in Model)
+{
+    <!-- Modal -->
+    <div class="modal fade" id="viewModal-@item.AppointmentId" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewModalLabel">View Appointment Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <dl class="row">
+
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.CreatedAppointmentDate)
+                        </dt>
+                        <dd class="col-sm-12">
+                            @Html.DisplayFor(model => item.CreatedAppointmentDate)
+                        </dd>
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.UpdatedAppointmentDate)
+                        </dt>
+                        <dd class="col-sm-12">
+                            @Html.DisplayFor(model => item.UpdatedAppointmentDate)
+                        </dd>
+                        <dt class="col-sm-2">
+
+                            @Html.DisplayNameFor(model => AppointmentType)
+                        </dt>
+                        <dd class="col-sm-12">
+                            @Html.DisplayFor(model => item.AppointmentTypeIdNavigation.TypeName)
+                        </dd>
+                        <dt class="col-sm-2">
+                            @{
+                                var PaymentMethod = "";
+                            }
+                            @Html.DisplayNameFor(model => PaymentMethod)
+                        </dt>
+                        <dd class="col-sm-12">
+                            @Html.DisplayFor(model => item.PaymentMethodIdNavigation.PaymentMethodName)
+                        </dd>
+                        <dt class="col-sm-2">
+                            @{
+                                var PatientType = "";
+                            }
+                            @Html.DisplayNameFor(model => PatientType)
+                        </dt>
+                        <dd class="col-sm-12">
+                            @Html.DisplayFor(model => item.PatientIdNavigation.PatientTypeIdNavigation.PatientTypeName)
+                        </dd>
+                        <dt class="col-sm-2">
+
+                            @Html.DisplayNameFor(model => Specialization)
+                        </dt>
+                        <dd class="col-sm-12">
+                            @if (item.DoctorIdNavigation.IsDeleted == false)
+                            {
+                                @Html.DisplayFor(modelItem =>
+                        item.DoctorIdNavigation.EmpDoctorSpecilzations.FirstOrDefault().DoctorSpecilzationIdNavigation.SpecializationName )
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem =>
+                        item.DoctorIdNavigation.DeletedEmpDoctorSpecilzations.FirstOrDefault().DoctorSpecilzationIdNavigation.SpecializationName )
+                            }
+                        </dd>
+
+
+                        <dt class="col-sm-2">
+
+                            @Html.DisplayNameFor(model => model.LaboratoryOrders)
+                        </dt>
+                        <dd class="col-sm-12">
+
+                            <ul>
+                                @if (item.LaboratoryOrders.Any())
+                                {
+                                    @foreach (var items in item.LaboratoryOrders)
+                                    {
+                                        <li>@items.LaboratoryTypeIdNavigation.LabName</li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li>no Orders Assigned to this Patient Yet!</li>
+                                }
+                            </ul>
+
+                        </dd>
+                        <dt class="col-sm-2">
+
+                            @Html.DisplayNameFor(model => model.RadiologyOrders)
+                        </dt>
+                        <dd class="col-sm-12">
+
+                            <ul>
+                                @if (item.RadiologyOrders.Any())
+                                {
+                                    @foreach (var items in item.RadiologyOrders)
+                                    {
+                                        <li>@items.RadiologyTypeIdNavigation.RadiologyName</li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li>no Orders Assigned to this Patient Yet!</li>
+                                }
+                            </ul>
+
+                        </dd>
+                        <dt class="col-sm-2">
+
+                            @Html.DisplayNameFor(model => model.MedicineOrders)
+                        </dt>
+                        <dd class="col-sm-12">
+
+                            <ul>
+                                @if (item.MedicineOrders.Any())
+                                {
+                                    @foreach (var items in item.MedicineOrders)
+                                    {
+                                        <li>@items.MedicineIdNavigation.MedicineName</li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li>no Orders Assigned to this Patient Yet!</li>
+                                }
+                            </ul>
+
+                        </dd>
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.IsCanceled)
+                        </dt>
+                        <dd class="col-sm-12">
+                            @if (!item.IsCanceled)
+                            {
+                                <span class="btn-danger rounded-3 bg-success"> Active</span>
+
+                            }
+                            else
+                            {
+                                <span class="btn-danger rounded-3 bg-danger"> Canceled</span>
+                            }
+
+                        </dd>
+                    </dl>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Include Bootstrap JavaScript and jQuery from CDN -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

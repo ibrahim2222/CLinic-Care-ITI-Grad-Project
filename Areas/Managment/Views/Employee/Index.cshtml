@@ -1,0 +1,328 @@
+﻿@model IEnumerable<Clinc_Care_MVC_Grad_PROJ.Areas.Managment.Models.Employee>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@*<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EmpFirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmpLastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmpBirthDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmpGender)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmpPhone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmpAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmpEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmpPassword)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmpNationalId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmpHirigDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmpSalary)
+            </th>
+            <th>
+                @{
+                    var Role = "";
+                }
+                @Html.DisplayNameFor(model => Role)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmpFirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmpLastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmpBirthDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmpGender)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmpPhone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmpAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmpEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmpPassword)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmpNationalId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmpHirigDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmpSalary)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmployeeTypeIdNavigation.TypeName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.EmpId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.EmpId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.EmpId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>*@
+<div id="content">
+
+    <div class="container-fluid">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <div class="row">
+                    <div class="col-8">
+                        <h6 class="m-0 font-weight-bold text-primary w-75 p-2"> <i class="fa-solid fa-users fa-2xl"></i> All Users</h6>
+                    </div>
+                    <div class="col-4">
+                        <a asp-action="create" asp-controller="Employee" asp-area="Managment" class="btn btn-outline-primary btn-sm float-right">
+                            <i class="fa fa-plus"></i>
+                            New User
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr class="text-center">
+                                <th>
+                                    <i class="fa-regular fa-address-card fa-lg"></i> @Html.DisplayNameFor(model => model.EmpId)
+                                </th>
+                                <th>
+                                    <i class="fa-solid fa-signature fa-lg"></i> @Html.DisplayNameFor(model => model.EmployeeFullName)
+                                </th>
+                              
+                               
+                                <th>
+                                   <i class="fa-solid fa-envelope fa-lg"></i> @Html.DisplayNameFor(model => model.EmpEmail)
+                                </th>
+                               
+                              
+                                <th>
+                                    <i class="fa-solid fa-calendar-days fa-lg"></i> @Html.DisplayNameFor(model => model.EmpHirigDate)
+                                </th>
+                               
+                                <th>
+                                    @{
+                                        var Role = "";
+                                    }
+                                    <i class="fa-brands fa-critical-role fa-lg"></i> @Html.DisplayNameFor(model => Role)
+                                </th>
+                                <th><i class="fa-solid fa-circle-exclamation fa-beat fa-lg"></i> Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr class="text-center">
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EmpId)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EmployeeFullName)
+                                    </td>
+                                   
+                                 
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EmpEmail)
+                                    </td>
+                                   
+                                  
+                                    <td>
+                                        <label class="badge badge-primary-soft"> @Html.DisplayFor(modelItem => item.EmpHirigDate)</label>
+                                    </td>
+                                  
+                                    <td>
+                                        @if(@item.EmployeeTypeIdNavigation.TypeName == "Nurse")
+                                        {
+                                            <label class="badge badge-warning-soft"><i class="fa-solid fa-user-nurse fa-xl"></i> @Html.DisplayFor(modelItem => item.EmployeeTypeIdNavigation.TypeName)</label>
+                                        }
+                                        else if (@item.EmployeeTypeIdNavigation.TypeName == "Doctor")
+                                        {
+                                             <label class="badge badge-warning-soft"><i class="fa-solid fa-user-doctor fa-xl"></i> @Html.DisplayFor(modelItem => item.EmployeeTypeIdNavigation.TypeName)</label>
+                                        }
+                                        else
+                                        {
+                                            <label class="badge badge-warning-soft"><i class="fa-solid fa-user-tie fa-xl"></i> @Html.DisplayFor(modelItem => item.EmployeeTypeIdNavigation.TypeName)</label>
+                                        }
+
+                                    </td>
+
+                                    <td>
+                                        @*<a asp-action="Details" asp-route-id="@item.EmpId" class="btn btn-outline-primary btn-sm">
+                                            <i class="fa-solid fa-eye fa-lg"></i>
+                                        </a>*@
+                                        <a href="#" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#myModal-@item.EmpId">
+                                            <i class="fa-solid fa-eye fa-lg"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@item.EmpId" class="btn btn-outline-warning btn-sm">
+                                            <i class="fa fa-pen"></i>
+                                        </a>
+
+                                        <a href="#" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#DeleteModal-@item.EmpId" >
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+
+                                       
+                                    </td>
+                                    
+                                </tr>
+                                <div class="modal fade" id="DeleteModal-@item.EmpId" tabindex="-1" role="dialog" aria-labelledby="DeleteModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-skull-crossbones fa-beat fa-xl"></i> Delete</h5>
+                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body"><strong>Are You Sure you want to delete this Role ?</strong></div>
+                                            <div class="modal-footer">
+                                                <a asp-action="Delete" asp-area="Managment" asp-controller="Employee" asp-route-id="@item.EmpId" class="btn btn-outline-danger btn-md">  Cancel</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade bd-example-modal-lg" id="myModal-@item.EmpId" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-person-circle-question fa-2xl"></i> Employee Details</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="card-body">
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6">
+                                                            <span><i class="fa-solid fa-id-card fa-lg"></i> Employee ID : </span>
+                                                            <label class="badge badge-primary-soft">@item.EmpId</label>
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <span><i class="fa-solid fa-signature fa-lg"></i> Employee Name : </span>
+                                                            <label class="badge badge-primary-soft">@item.EmpFirstName</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6">
+                                                            <span><i class="fa-solid fa-envelope fa-lg"></i> Employee Email : </span>
+                                                            <label class="badge badge-primary-soft">@item.EmpEmail</label>
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <span><i class="fa-solid fa-calendar-days fa-lg"></i> Employee BirthDate : </span>
+                                                            <label class="badge badge-primary-soft">@item.EmpBirthDate</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6">
+                                                            <span><i class="fa-solid fa-venus-mars fa-lg"></i> Employee Gender : </span>
+                                                            <label class="badge badge-primary-soft">@item.EmpGender</label>
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <span><i class="fa-solid fa-phone-volume fa-lg"></i> Employee Phone : </span>
+                                                            <label class="badge badge-primary-soft"> @item.EmpPhone</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6">
+                                                            <span><i class="fa-solid fa-signature fa-lg"></i> Employee Address : </span>
+                                                            <label class="badge badge-primary-soft">@item.EmpAddress</label>
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <span><i class="fa-solid fa-lock fa-lg"></i> Employee Password : </span>
+                                                            <label class="badge badge-primary-soft"> @item.EmpPassword</label>
+                                                        </div>
+                                                    </div> 
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6">
+                                                            <span><i class="fa-solid fa-file fa-lg"></i> Employee NationalId : </span>
+                                                            <label class="badge badge-primary-soft">@item.EmpNationalId</label>
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <span><i class="fa-solid fa-money-bills fa-lg"></i> Employee EmpSalary : </span>
+                                                            <label class="badge badge-primary-soft">@item.EmpSalary</label>
+                                                        </div>
+                                                    </div> 
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6">
+                                                            <span><i class="fa-solid fa-section fa-lg"></i> Employee TypeId : </span>
+                                                            <label class="badge badge-primary-soft">@item.EmployeeTypeId</label>
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <span><i class="fa-solid fa-stethoscope fa-lg"></i> Employee Specializations : </span>
+                                                            <label class="badge badge-primary-soft">@item.EmployeeTypeIdNavigation.TypeName</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6">
+                                                            <span><i class="fa-solid fa-hands-holding-circle fa-lg"></i> Employee RoleName : </span>
+                                                            @if (@item.EmployeeTypeIdNavigation.EmployeeTypeId == 1)
+                                                            {
+                                                                <label class="badge badge-primary-soft">Admin</label>
+                                                            }
+                                                            else if (@item.EmployeeTypeIdNavigation.EmployeeTypeId == 2)
+                                                            {
+                                                                <label class="badge badge-primary-soft">Doctor</label>
+                                                            }
+                                                            else
+                                                            {
+                                                                <label class="badge badge-primary-soft">Nurse</label>
+                                                            }
+                                                        </div>
+                                                      
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </tbody>
+                    </table>
+                    <span class="float-right mt-3"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

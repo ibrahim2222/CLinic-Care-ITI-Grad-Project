@@ -1,0 +1,335 @@
+﻿@model IEnumerable<Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models.Appointment>
+@namespace Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models
+@inject Clinc_Care_MVC_Grad_PROJ.Models.UnitOfWork.IUnitOfWork UnitOfWork;
+
+@using Microsoft.AspNetCore.Html;
+@{
+    ViewData["Title"] = "All Appointment";
+}
+@{
+    Layout = "_Layout2";
+}
+
+<style>
+    .filterBtn {
+        width: 200px;
+    }
+</style>
+<div class="mb-5 d-flex align-itmes-center justify-content-evenly">
+    
+    @if (Context.GetRouteValue("id") != null )
+    {
+      
+        <a asp-action="AllAppointment" asp-controller="HomeDashboard" asp-area="Managment" asp-route-id="" class="btn btn-secondary p-2 filterBtn">
+            <i class="fa-solid fa-filter-circle-xmark me-3"></i>
+            Clear Filters
+        </a>
+    }
+
+    <form asp-action="TodayAppointmentAll" >
+        <button class="btn btn-warning p-2 filterBtn" type="submit">
+            <i class="fa-solid fa-calendar-day "></i>
+            Today's Appointments
+        </button>
+    </form>
+
+
+    <form asp-action="AllAppointment" asp-route-id="1">
+        <button class="btn btn-primary p-2 filterBtn" type="submit">
+            <i class="fa-solid fa-bookmark me-3"></i>
+            Reserverd
+        </button>
+    </form>
+    <form asp-action="AllAppointment" asp-route-id="2">
+        <button class="btn btn-info p-2 filterBtn" type="submit">
+            <i class="fa-solid fa-spinner fa-spin-pulse me-3"></i>
+            Queued
+        </button>
+    </form>
+    <form asp-action="AllAppointment" asp-route-id="3">
+        <button class="btn btn-dark p-2 filterBtn" type="submit">
+            <i class="fa-solid fa-forward fa-fade me-3"></i>
+            Ready
+        </button>
+    </form>
+    <form asp-action="AllAppointment" asp-route-id="4">
+        <button class="btn btn-success p-2 filterBtn" type="submit">
+            <i class="fa-solid fa-hospital-user me-3"></i>
+            Treated
+        </button>
+    </form>
+    <form asp-action="AllAppointment" asp-route-id="5">
+        <button class="btn btn-danger p-2 filterBtn" type="submit">
+            <i class="fa-solid fa-ban me-3"></i>
+            Canceled
+        </button>
+    </form>
+
+</div>
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <div class="row">
+                    <div class="col-10">
+                        <h6 class="m-0 font-weight-bold text-primary w-75 p-2">
+                            <i class="fa-solid fa-rectangle-list fa-2x fa-bounce"></i>
+                            All Appointments
+                        </h6>
+                    </div>
+                    @{
+                        var oldApps = UnitOfWork.AppointmentRepository.GetAllAppointments().Where(a => a.AppointmentDate.Year <= DateTime.Now.Year && a.AppointmentDate.Month <= DateTime.Now.Month && a.AppointmentDate.Day < DateTime.Now.Day && a.AppointmentState != AppointmentStates.treated && a.AppointmentState != AppointmentStates.canceled).ToList();
+                        
+                     }
+
+                    @if(oldApps.Count >0)
+                    {
+                        <div class="col-2">
+                            <form asp-action="ClearOldAppointments">
+                                <button type="submit" class="btn btn-danger"><i class="fa-regular fa-calendar-xmark"></i> Clear Old Dates</button>
+                            </form>
+                        </div>
+                    }
+
+
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="dataTable" width="100%">
+                        <thead class="text-center">
+                            <tr>
+                                <th class="text-center align-middle">
+                                    <label>ID</label>
+                                </th>
+                                <th class="text-center align-middle">
+                                    <label>Patient Name</label>
+                                </th>
+                                <th class="text-center align-middle">
+                                    <label>Date</label>
+                                </th>
+                                <th class="text-center align-middle">
+                                    <label>Status</label>
+                                </th>
+
+                                <th class="text-center align-middle">
+                                    <label>Specialization</label>
+                                </th>
+                                <th class="text-center align-middle">
+                                    <i class="fas fa-cog fa-spin"></i> Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+
+                                <tr>
+
+                                    <td class="text-center">
+                                        @Html.DisplayFor(modelItem => item.AppointmentId)
+                                    </td>
+                                    <td class="text-center">
+                                        @Html.DisplayFor(modelItem => item.PatientIdNavigation.PatientFullName)
+                                    </td>
+                                    <td class="text-center">
+                                        @{
+                                            var Date = item.AppointmentDate.ToString("d/M/yyyy");
+                                        }
+                                        <label class="badge badge-primary-soft">
+                                            <i class="far fa-calendar-check"></i> @Html.DisplayFor(modelItem => Date)
+
+                                        </label>
+                                    </td>
+
+                                    <td class="text-center">
+
+                                        @if (item.AppointmentState == AppointmentStates.reserverd)
+                                        {
+                                            <label class="badge badge-warning-soft">
+                                                <i class="fa-solid fa-user-clock"></i> @Html.DisplayFor(modelItem => item.AppointmentState)
+                                            </label>
+                                        }
+                                        else if (item.AppointmentState == AppointmentStates.queued)
+                                        {
+                                            <label class="badge badge-warning-soft">
+                                                <i class="fas fa-spinner fa-pulse"></i> @Html.DisplayFor(modelItem => item.AppointmentState)
+                                            </label>
+                                        }
+                                        else if (item.AppointmentState == AppointmentStates.canceled)
+                                        {
+                                            <label class="badge badge-danger-soft">
+                                                <i class="fa-solid fa-user-xmark"></i> @Html.DisplayFor(modelItem => item.AppointmentState)
+                                            </label>
+                                        }
+                                        else if (item.AppointmentState == AppointmentStates.ready)
+                                        {
+                                            <label class="badge badge-success-soft">
+                                                <i class="fa-solid fa-thumbs-up fa-bounce"></i> @Html.DisplayFor(modelItem => item.AppointmentState)
+                                            </label>
+                                        }
+                                        else if (item.AppointmentState == AppointmentStates.treated)
+                                        {
+                                            <label class="badge badge-success-soft">
+                                                <i class="fa-solid fa-user-check"></i> @Html.DisplayFor(modelItem => item.AppointmentState)
+                                            </label>
+                                        }
+
+
+                                    </td>
+                                    <td class="text-center">
+                                        <label class="badge badge-primary-soft">
+                                            <i class="fa-solid fa-heart-pulse fa-beat"></i>  @if (item.DoctorIdNavigation.IsDeleted == false)
+                                            {
+                                                @Html.DisplayFor(modelItem =>
+                                        item.DoctorIdNavigation.EmpDoctorSpecilzations.FirstOrDefault().DoctorSpecilzationIdNavigation.SpecializationName )
+                                            }
+                                            else
+                                            {
+                                                @Html.DisplayFor(modelItem =>
+                                        item.DoctorIdNavigation.DeletedEmpDoctorSpecilzations.FirstOrDefault().DoctorSpecilzationIdNavigation.SpecializationName )
+                                            }
+                                        </label>
+                                    </td>
+
+
+                                    <!-- Modal -->
+
+
+                                    <td class="text-center">
+
+                                        <a class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#AppDetailsModal" data-appid="@item.AppointmentId">
+                                            <i class="fa-solid fa-eye fa-lg"></i>
+                                        </a>
+                                        @{
+                                            var today = DateTime.Now.Date;
+
+                                            if (item.AppointmentDate.Date >= today && item.IsCanceled == false && item.AppointmentState != AppointmentStates.treated)
+                                            {
+                                                <a href="#" class="btn btn-outline-danger btn-sm open-CancelModal" data-toggle="modal" data-target="#CancelModal" data-appid="@item.AppointmentId">
+                                                    <i class="fa-solid fa-ban fa-lg"></i>
+                                                </a>
+                                            }
+                                            else if (item.AppointmentDate.Date >= today && item.IsCanceled == true)
+                                            {
+                                                <a href="#" class="btn btn-outline-danger btn-sm open-CancelModal" data-toggle="modal" data-target="#CancelModal" data-appid="@item.AppointmentId">
+                                                    <i class="fa-solid fa-rotate-right fa-lg"></i>
+                                                </a>
+                                            }
+
+
+                                            if(item.AppointmentState == AppointmentStates.treated)
+                                            {
+                                                <a asp-action="Prescription" asp-controller="Appointment" asp-area="Client" class="btn btn-outline-primary" asp-route-id="@item.AppointmentId">
+                                                    <i class="fa-solid fa-file-prescription"></i>
+                                                </a>
+                                            }
+
+                                        }
+                                  
+
+                                    </td>
+
+                                </tr>
+
+                                <div class="modal fade" id="myModal-@item.AppointmentId" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel"><i class="fa-solid fa-circle-info"></i> Appointment Details</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p><strong>Appointment ID:</strong> <label class="badge badge-primary-soft"> @item.AppointmentId</label></p>
+                                                <p><strong>Appointment Date:</strong> <label class="badge badge-primary-soft"> @item.CreatedAppointmentDate.ToString("dd MMM yyyy")</label></p>
+                                                <p><strong>Patient Name:</strong> <label class="badge badge-primary-soft"> @item.PatientIdNavigation.PatientFullName</label></p>
+                                                <p><strong>Patient Phone:</strong>  @if (@item.PatientIdNavigation.PatientPhone!=null) { <label class="badge badge-primary-soft">@item.PatientIdNavigation.PatientPhone</label>}else{<span><label class="badge badge-danger-soft">Unkown</label></span>}</p>
+                                                <p><strong>Patient BirthDate:</strong> <label class="badge badge-primary-soft"> @if (@item.PatientIdNavigation.PatientBirthDate != null) {@item.PatientIdNavigation.PatientBirthDate}else{<span>Unkown</span>}</label></p>
+                                                <p><strong>Patient Gender:</strong> <label class="badge badge-primary-soft"> @if (@item.PatientIdNavigation.PatientGender != null) { @item.PatientIdNavigation.PatientGender}else{<span>Unkown</span>}</label></p>
+                                                <p><strong>Patient Type:</strong> <label class="badge badge-primary-soft"> @item.PatientIdNavigation.PatientTypeIdNavigation.PatientTypeName</label></p>
+
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                @if (item.AppointmentState != AppointmentStates.canceled)
+                                                {
+                                                    <a asp-action="Delete" asp-area="Client" asp-controller="Appointment" asp-route-id="@item.AppointmentId" class="btn btn-outline-danger btn-md"> <i class="fa-solid fa-xmark"></i> Cancel</a>
+                                                }
+                                                @*<a asp-action="Update" asp-area="Client" asp-controller="Appointment" asp-route-id="@item.AppointmentId" class="btn btn-outline-primary btn-md"> <i class="fa-solid fa-check-double"></i> Confirm Appointment</a>*@
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="CancelModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Cancel Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want Cancel this appointment ?
+            </div>
+            <div class="modal-footer">
+                <a id="AppId" class="btn btn-outline-danger">Yes,Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="AppDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        $('#AppDetailsModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var appointmentId = button.data('appid');
+            var modal = $(this);
+            $.ajax({
+                url: '@Url.Action("GetAppointmentDetails", "Appointment",new { area = "Client" })',
+                data: { id: appointmentId },
+                type: 'GET',
+                cache: false,
+                success: function (result) {
+                    modal.find('.modal-content').html(result);
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        });
+    });
+
+    $(document).on("click", ".open-CancelModal", function () {
+        var myAppId = "/Client/Appointment/Delete/" + $(this).data('appid');
+        $("#AppId").attr('href', myAppId);
+    });
+
+    $(document).ready(function () {
+        $('#dataTable').DataTable();
+    });
+
+</script>

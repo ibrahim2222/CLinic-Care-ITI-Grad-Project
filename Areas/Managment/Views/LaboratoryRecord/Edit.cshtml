@@ -1,0 +1,48 @@
+﻿@model Clinc_Care_MVC_Grad_PROJ.Areas.Managment.Models.LaboratoryRecord
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>LaboratoryRecord</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="LabResult" class="control-label"></label>
+                <input asp-for="LabResult" class="form-control" />
+                <span asp-validation-for="LabResult" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LabRecordsDate" class="control-label"></label>
+                <input asp-for="LabRecordsDate" class="form-control" />
+                <span asp-validation-for="LabRecordsDate" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+                <label asp-for="PatientId" class="control-label"></label>
+                <select asp-for="PatientId" class="form-control" asp-items="@ViewBag.Patients"></select>
+                <span asp-validation-for="PatientId" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="LabTypeId" class="control-label"></label>
+                <select asp-for="LabTypeId" class="form-control" asp-items="@ViewBag.LabTypes"></select>
+                <span asp-validation-for="LabTypeId" class="text-danger"></span>
+
+            </div>
+            <input type="hidden" asp-for="LabTypeId" />*@
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

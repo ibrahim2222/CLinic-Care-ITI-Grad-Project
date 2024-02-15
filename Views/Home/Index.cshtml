@@ -1,0 +1,520 @@
+﻿@inject Clinc_Care_MVC_Grad_PROJ.Models.UnitOfWork.IUnitOfWork Db ;
+@{
+    ViewData["Title"] = "Home";
+    var DrSpecs = Db.EmpDoctorSpecializionRepository.GetAllEmpDoctorSpecilzations().Where(s=>s.DoctorIdNavigation.DoctorSchedules.Count>0).Select(s=>s.DoctorSpecilzationIdNavigation);
+    var DrSched = Db.DoctorScheduleRepository.GetAllDoctorSchedule();
+    var ExFee = Db.FeeRepository.GetAllFees().Where(f => f.FeeName == "Booking").FirstOrDefault();
+}
+
+
+<div class="content">
+    <div class="slider">
+        <div>
+            <img src="imgs/slide1.jpg" alt="" width="100%">
+            <img src="imgs/slide3.jpg" alt="" width="100%">
+            <!-- <div class="left-slider arrow flex-cntr">
+                <span style="font-size: 1.5rem ; color:white">
+                    <i class="fas fa-chevron-left fa-xs"></i>
+                </span>
+            </div>
+            <div class="right-slider arrow flex-cntr">
+                <span style="font-size: 1.5rem ; color:white">
+                    <i class="fas fa-chevron-right fa-xs"></i>
+                </span>
+            </div> -->
+        </div>
+        <div class="fadding-text">
+            <div class="huge-ltr fst">Better</div>
+            <div class="huge-ltr fst">medicine</div>
+            <div class="huge-ltr trd">for </div>
+            <div class="huge-ltr fth">families.</div>
+            <div class="checked fith">
+                <span style="font-size: 0.7rem ; color:#004ED7">
+                    <i class="fas fa-check fa-xs"></i>
+                </span>
+                <div> Advanced Technology and Care</div>
+            </div>
+            <div class="checked sth">
+                <span style="font-size: 0.7rem ; color:#004ED7">
+                    <i class="fas fa-check fa-xs"></i>
+                </span>
+                <div> Bright mindsand medicine</div>
+            </div>
+            <div class="slider-btn">
+                <a href="#Departments">
+                    see departments <span style="font-size: 0.8rem ; color:white">
+                        <i class="fas fa-chevron-right fa-xs"></i>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="services" id="about">
+        <div class="flx-coln">
+            <span style="font-size: 3rem ; color:white">
+                <i class="fas fa-mobile-alt fa-1x"></i>
+            </span>
+            <h3>+20-109-941-2326</h3>
+            <p>Patient is information gained by a physician by asking specific questions.</p>
+        </div>
+        <div class="flx-coln">
+            <span style="font-size: 3rem ; color:white">
+                <i class="fas fa-briefcase-medical"></i>
+            </span>
+            <h3>Academic Research</h3>
+            <p>Patient is information gained by a physician by asking specific questions.</p>
+        </div>
+        <div class="flx-coln">
+            <span style="font-size: 3rem ; color:white">
+                <i class="far fa-clock"></i>
+            </span>
+            <h3>Emergency Service</h3>
+            <p>Patient is information gained by a physician by asking specific questions.</p>
+        </div>
+        <div class="flx-coln">
+            <span style="font-size: 3rem ; color:white">
+                <i class="fas fa-phone-volume"></i>
+            </span>
+            <h3>Consult to a doctor</h3>
+            <p>Patient is information gained by a physician by asking specific questions.</p>
+        </div>
+    </div>
+
+    <div class="serv-opn">
+        <div class="flx-coln-cntr">
+            <span style="font-size: 4rem ; color:#004ED7">
+                <i class="fas fa-user-md"></i>
+            </span>
+            <h3>Trusted Doctors</h3>
+            <p>Patient is information gained by a physician by asking specific questions, either.</p>
+            <a href="#Doc-crew" class="flex-cntr">
+                See Our Doctors<span style="font-size: 0.8rem ; color:#004ED7">
+                    <i class="fas fa-chevron-right fa-xs"></i>
+                </span>
+            </a>
+        </div>
+
+        <div class="flx-coln-cntr">
+            <span style="font-size: 4rem ; color:#004ED7">
+                <i class="fas fa-file-medical-alt"></i>
+            </span>
+            <h3>Emergency Line</h3>
+            <p>Patient is information gained by a physician by asking specific questions, either.</p>
+            <a href="#emrg-call">
+                Learn More <span style="font-size: 0.8rem ; color:#004ED7">
+                    <i class="fas fa-chevron-right fa-xs"></i>
+                </span>
+            </a>
+        </div>
+
+        <div class="flx-coln-cntr">
+            <span style="font-size: 4rem ; color:#004ED7">
+                <i class="fas fa-heartbeat"></i>
+            </span>
+            <h3>Online Appointment</h3>
+            <p>Patient is information gained by a physician by asking specific questions, either.</p>
+            <a href="#Appointment">
+                Book Appointment<span style="font-size: 0.8rem ; color:#004ED7">
+                    <i class="fas fa-chevron-right fa-xs"></i>
+                </span>
+            </a>
+        </div>
+    </div>
+
+    <div class="same-bg">
+        <div class="doc-meet" id="staff">
+            <div class="flx-coln">
+                <h1>The milestone in excellent health care.</h1>
+                <p>
+                    The Medical Cure program participates in student fairs in select locations. You can always
+                    Book
+                    an appointment for upcoming events. You can sign up for free alerts and reminders about
+                    registration, test preparation and more at the Cure. Feel free to bring a friend or family
+                    member to potentially stressful visits.
+                </p>
+                <a href="#docc-crew">
+                    Meet Our Doctors <span style="font-size: 0.8rem ; color:white">
+                        <i class="fas fa-chevron-right fa-xs"></i>
+                    </span>
+                </a>
+            </div>
+            <img src="imgs/trans-doc.png" alt="">
+        </div>
+        <div class="flex-cntr" id="department">
+            <h1>Departments</h1>
+        </div>
+        <div class="more-serv">
+            <div class="flx-coln serv-lst">
+                <h2 class="clr-hov">Services</h2>
+                <ul class="clr-hov">
+                    <li>
+                        <span class="clr-hov" style="font-size: 0.7rem ; color:#C8C6D4">
+                            <i class="fas fa-check fa-s"></i>
+                        </span>Transplant Center
+                    </li>
+                    <li>
+                        <span class="clr-hov" style="font-size: 0.7rem ; color:#C8C6D4">
+                            <i class="fas fa-check fa-s"></i>
+                        </span>Neurology
+                    </li>
+                    <li>
+                        <span class="clr-hov" style="font-size: 0.7rem ; color:#C8C6D4">
+                            <i class="fas fa-check fa-s"></i>
+                        </span>Pediatric Center
+                    </li>
+                    <li>
+                        <span class="clr-hov" style="font-size: 0.7rem ; color:#C8C6D4">
+                            <i class="fas fa-check fa-s"></i>
+                        </span>Plastic Surgery
+                    </li>
+                    <li>
+                        <span class="clr-hov" style="font-size: 0.7rem ; color:#C8C6D4">
+                            <i class="fas fa-check fa-s"></i>
+                        </span>Dental
+                    </li>
+                    <li>
+                        <span class="clr-hov" style="font-size: 0.7rem ; color:#C8C6D4">
+                            <i class="fas fa-check fa-s"></i>
+                        </span>Physiotherapy
+                    </li>
+                </ul>
+                <a href="#services">
+                    view all <span style="font-size: 0.7rem ; color:white">
+                        <i class="fas fa-chevron-right fa-xs"></i>
+                    </span>
+                </a>
+            </div>
+            <div>
+                <img src="imgs/1-serv.jpg" alt="">
+                <h2>Maxillofacial </h2>
+                <p>
+                    Patient is information gained by a physician by asking specific questions, either of the
+                    patient.
+                </p>
+            </div>
+            <div>
+                <img src="imgs/2-serv.jpg" alt="">
+                <h2>Magnetic Resonance</h2>
+                <p>
+                    Patient is information gained by a physician by asking specific questions, either of the
+                    patient.
+                </p>
+            </div>
+            <div>
+                <img src="imgs/3-serv.jpg" alt="">
+                <h2>Oral Medicine</h2>
+                <p>
+                    Patient is information gained by a physician by asking specific questions, either of the
+                    patient.
+                </p>
+            </div>
+        </div>
+        <div class="serv-counter">
+            <div class="flx-coln-cntr">
+                <h1>18 +</h1>
+                <p>Years of experience</p>
+            </div>
+            <div class="flx-coln-cntr">
+                <h1>41 +</h1>
+                <p>Health Centers</p>
+            </div>
+            <div class="flx-coln-cntr">
+                <h1>28 +</h1>
+                <p>Doctors and Staff</p>
+            </div>
+            <div class="flx-coln-cntr">
+                <h1>40 +</h1>
+                <p>Academic Papers</p>
+            </div>
+        </div>
+        <div class="flx-coln-cntr loved-one" id="testimonials">
+            <h1>
+                <span style="font-size: 1.4rem ; color:white" class="flex-cntr">
+                    <i class="fas fa-quote-right"></i>
+                </span>Testimonials
+            </h1>
+            <p>We take care of your loved ones.</p>
+        </div>
+    </div>
+
+    <div class="patient-fdbck">
+        <div class="flx-coln">
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at diam nec neque laoreet
+                malesuada.
+            </p>
+            <div>
+                <img src="imgs/pat-1.ico" alt="">
+                <div class="flx-coln">
+                    <h2>Jonathan Steve</h2>
+                    <p>Patient</p>
+                </div>
+            </div>
+        </div>
+        <div class="flx-coln">
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at diam nec neque laoreet
+                malesuada.
+            </p>
+            <div>
+                <img src="imgs/pat-2.ico" alt="">
+                <div class="flx-coln">
+                    <h2>Jonathan Steve</h2>
+                    <p>Patient</p>
+                </div>
+            </div>
+        </div>
+        <div class="flx-coln">
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at diam nec neque laoreet
+                malesuada.
+            </p>
+            <div>
+                <img src="imgs/pat-3.ico" alt="">
+                <div class="flx-coln">
+                    <h2>Jonathan Steve</h2>
+                    <p>Patient</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="big-title" id="contact">
+        <div>Call us and book appointment +20-109-941-2326</div>
+        <div> <a href="#appointment">Book Appointment</a></div>
+    </div>
+
+    <div class="on-app-book d-flex align-items-center justify-content-evenly" id="appointment">
+        <div class="flx-coln-cntr app-info">
+            <div class="form-img"><img src="imgs/form-doc.png" alt=""></div>
+            <div class="alerts d-flex align-items-center justify-content-evenly w-100">
+                <div>
+                    <div class="flex-cntr">
+                        <span style="font-size: 2rem ; color:#004ED7">
+                            <i class="fas fa-info"></i>
+                        </span>
+                    </div>
+                    <div>
+                        <h4>Before the Appoinment</h4>
+                        <p>
+                            You can sign up for free alerts and reminders about registration, test preparation
+                            and
+                            more at the Cure.
+                        </p>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex-cntr">
+                        <span style="font-size: 2rem ; color:#004ED7">
+                            <i class="fas fa-phone-alt"></i>
+                        </span>
+                    </div>
+                    <div>
+                        <h4>+20-109-941-2326</h4>
+                        <p>You can always call this number for more information.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+ 
+        @if (User.Identity.IsAuthenticated && User.IsInRole("Client"))
+        {
+            var climail = User.Identity.Name;
+            var patient = Db.PatientRepository.GetAllPatients().SingleOrDefault(c => c.PatientEmail == climail);
+
+            <div class="flx-coln-cntr main-form" id="Appointment-form">
+                <h3>Book appointment</h3>
+                <p>
+                    Please call
+                    <span>
+                        <span style="font-size: 1rem ; color:#004ED7"> <i class="fas fa-phone-alt"></i></span>
+                        +20-109-941-2326
+                    </span> if urgent. Your personal case manager will ensure that you receive the best
+                    possible
+                    care.
+                </p>
+
+                <p class="my-1 p-1">@ExFee.FeeName Fees: @ExFee.FeeAmount EGP</p>
+                <form asp-action="CreateCheckoutSession" asp-controller="Payment" class="flx-coln p-4">
+                    <div class="d-flex flex-column mt-2 text-dark">
+                        <label for="selectedDepartment">Select Department</label>
+                        <select name="SpecializationID" id="selectedDepartment" required class="form-select my-2">
+                            <option value="" selected></option>
+                            @foreach (var dept in DrSpecs.Where(ds => ds.EmpDoctorSpecilzations.Count > 0))
+                            {
+                                <option value="@dept.SpecializationId">@dept.SpecializationName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label for="appDate">Select Day</label>
+                        <select name="AppoitmentDate" id="appDate" required class="form-select my-2">
+                        </select>
+                    </div>
+                    <div class="mb-5">
+                        <label for="IsCash">Payment Method</label>
+
+                        <select name="IsCash" class="form-select" id="IsCash">
+                            <option value="1">Cash</option>
+                            <option value="2">Visa</option>
+                        </select>
+                    </div>
+                    <input type="hidden" value="@ExFee.FeeAmount" name="Fees">
+                    @if (patient.PatientBirthDate == null || patient.PatientGender == null || patient.PatientPhone == null)
+                    {
+                        <a asp-action="profile" asp-controller="home" asp-route-id="@patient.PatientId" class="btn btn-danger">Complete Your Data To Book An Appointment</a>
+                    }
+                    else
+                    {
+                        <input type="submit" name="submit" id="done" value="MAKE AN APPOINTMENT">
+
+                    }
+                </form>
+            </div>
+        }
+        else
+        {
+        }      
+    </div>
+
+    <div class="location">
+        <div class="info-ps">
+            <div class="info">
+                <span style=" font-size: 1.5rem ; color:rgb(250, 250, 250 , 0.5)">
+                    <i class="fas fa-phone-alt"></i>
+                </span>
+                <div>
+                    <span>Phone </span>
+                    <span>+20-109-941-2326</span>
+                </div>
+            </div>
+            <div class="info">
+                <span style=" font-size: 1.5rem ; color:rgb(250, 250, 250 , 0.5)">
+                    <i class="far fa-envelope"></i>
+                </span>
+                <div>
+                    <span>Mail </span>
+                    <span> roshetaclinic@gmail.com</span>
+                </div>
+
+            </div>
+            <div class="info">
+                <span style=" font-size: 1.5rem ; color:rgb(250, 250, 250 , 0.5)">
+                    <i class="far fa-map"></i>
+                </span> Example Medical Address, Boston
+            </div>
+            <div class="info-text">Use the form below to ask questions or send feedback about our staff.</div>
+            <div class="info-social">
+                <span>
+                    <i class="fab fa-facebook-f"></i>
+                </span>
+                <span>
+                    <i class="fab fa-twitter"></i>
+                </span>
+                <span>
+                    <i class="fab fa-instagram"></i>
+                </span>
+
+            </div>
+        </div>
+        <div>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d55268.67517778004!2d31.12961332167969!3d30.028473900000012!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145847bb846e3799%3A0x548589ae5d24cbd0!2sITI%20Cairo%20University!5e0!3m2!1sen!2seg!4v1695804779633!5m2!1sen!2seg"
+                    width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </div>
+</div>
+
+<script>
+    const AppiotmentDept = document.querySelector("#selectedDepartment");
+    const selectElement = document.querySelector("#appDate");
+
+    async function getDrWorkDays(value) {
+        const DrSch = await fetch(`/Managment/DoctorSchedule/ScheduleBySpecilzationApi/${value}`)
+        return await DrSch.json();
+    }
+    const daysOfWeek = {
+        Sunday: 0,
+        Monday: 1,
+        Tuesday: 2,
+        Wednesday: 3,
+        Thursday: 4,
+        Friday: 5,
+        Saturday: 6,
+    };
+
+    AppiotmentDept.addEventListener("change", async () => {
+        if (AppiotmentDept.value == "") {
+            selectElement.innerHTML = "";
+        } else {
+   
+            const data = await getDrWorkDays(AppiotmentDept.value);
+            const daysList = data["selectedDays"]["$values"]
+            const apposDates = data["apposDates"]["$values"]
+            selectElement.innerHTML = "";
+            const dateMap = {};
+
+            apposDates.forEach((item, index) => {
+                const date = item.Date;
+                const createDate = new Date(item.CreateDate);
+
+                if (!dateMap[date] || createDate > dateMap[date].createDate) {
+                    dateMap[date] = {
+                        createDate,
+                        CancelFlag: item.CancelFlag
+                    };
+                }
+            });
+
+            const uniqueDates = Object.entries(dateMap).map(([date, { CancelFlag }]) => ({
+                date,
+                CancelFlag
+            }));
+            console.log(uniqueDates)
+            const today = new Date();
+
+            for (const selectedDay of daysList) {
+                const selectedDayIndex = daysOfWeek[selectedDay];
+                const currentDayIndex = today.getDay();
+                const daysToAdd = (selectedDayIndex - currentDayIndex + 7) % 7;
+                const nearestDate = new Date(today);
+                nearestDate.setDate(today.getDate() + daysToAdd );
+                let formattedDate =
+                    nearestDate.getFullYear() +
+                    "-" +
+                    String(nearestDate.getMonth() + 1).padStart(2, "0") +
+                    "-" +
+                    String(nearestDate.getDate()).padStart(2, "0");
+                
+                
+                const dateArray = uniqueDates.map(item => item.date);
+                if (dateArray.includes(formattedDate)) {
+                    if (uniqueDates[dateArray.indexOf(formattedDate)]["CancelFlag"] == false && today.getHours() <= 16) {
+                        continue;
+                    }
+                }
+                if (
+                    currentDayIndex === selectedDayIndex &&
+                    today.getHours() >= 16
+                ) {
+                    nearestDate.setDate(nearestDate.getDate() + 7);
+                }
+                const optionText = `${selectedDay} - ${nearestDate.toLocaleDateString()}`;
+                formattedDate =
+                    nearestDate.getFullYear() +
+                    "-" +
+                    String(nearestDate.getMonth() + 1).padStart(2, "0") +
+                    "-" +
+                    String(nearestDate.getDate()).padStart(2, "0");
+                const option = document.createElement("option");
+                option.value = formattedDate;
+                option.text = optionText
+                selectElement.appendChild(option);
+            }
+        }
+
+    })
+
+
+</script>

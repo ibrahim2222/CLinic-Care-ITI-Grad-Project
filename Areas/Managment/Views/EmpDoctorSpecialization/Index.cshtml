@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Clinc_Care_MVC_Grad_PROJ.Areas.Managment.Models.EmpDoctorSpecilzation>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DoctorIdNavigation.EmployeeFullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DoctorSpecilzationIdNavigation.SpecializationName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                    @Html.DisplayFor(modelItem => item.DoctorIdNavigation.EmployeeFullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DoctorSpecilzationIdNavigation.SpecializationName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.EmpDoctorSpecilzationId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.EmpDoctorSpecilzationId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.EmpDoctorSpecilzationId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

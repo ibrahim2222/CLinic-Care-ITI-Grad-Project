@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Clinc_Care_MVC_Grad_PROJ.Models
+@inject SignInManager<AppUser> SignInManager
+
+
+@{
+    var providers = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+    if (!providers.Any())
+    {
+        <div>
+            <p>
+                We couldn't find any external provider
+            </p>
+        </div>
+    }
+    else
+    {
+        <form asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" class="form-horizontal">
+            @foreach (var provider in providers)
+            {
+                var pname = provider.Name;
+                <p class="@pname-btn my-2 rounded rounded-pill">
+                    Connect with
+                    <span>
+                        <input type="submit" value="@provider.Name" name="provider" />
+                    </span>
+                </p>
+            }
+        </form>
+    }
+}

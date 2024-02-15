@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Clinc_Care_MVC_Grad_PROJ.Areas.Managment.Models.DeletedEmpDoctorSpecilzation>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>History</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DoctorIdNavigation.EmployeeFullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DoctorSpecilzationIdNavigation.SpecializationName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DoctorIdNavigation.EmployeeFullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DoctorSpecilzationIdNavigation.SpecializationName)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

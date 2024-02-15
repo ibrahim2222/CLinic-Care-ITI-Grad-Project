@@ -1,0 +1,43 @@
+﻿@model Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models.Appointment
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Raiology orders</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Radiology test Name</th>
+                <th scope="col">Is Internal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var counter = 0;
+            }
+            @foreach (var radiologyOrder in Model.RadiologyOrders)
+            {
+                counter++;
+                <tr>
+                    <th scope="row">@counter</th>
+                    <td>@radiologyOrder.RadiologyTypeIdNavigation.RadiologyName</td>
+                    @if (radiologyOrder.IsInternal == true)
+                    {
+
+                        <td><span class="badge bg-success">Inside</span></td>
+                    }
+                    else
+                    {
+                        <td><span class="badge bg-danger">Outside</span></td>
+
+                    }
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+</div>

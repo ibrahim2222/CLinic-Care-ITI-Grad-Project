@@ -1,0 +1,131 @@
+﻿@model Clinc_Care_MVC_Grad_PROJ.Models.ViewModels.CombinedVM
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<link rel="stylesheet" href="/css/login.css" asp-append-version="true" />
+<style>
+    div.Errors ul {
+        list-style: none;
+        padding: 0;
+    }
+
+        div.Errors ul li {
+            position: relative;
+            padding: 1rem 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+            border-radius: 0.25rem;
+            color: #842029;
+            background-color: #f8d7da;
+            border-color: #f5c2c7;
+        }
+</style>
+
+<div class="cont">
+    <div class="form sign-in">
+        <div asp-validation-summary="All" class="text-danger Errors"></div>
+        <form id="signInForm" asp-action="Login">
+            <h2>Welcome back,</h2>
+            <label>
+                <span>Email</span>
+                <input asp-for="LogModel.LoginEmail" />
+                <span asp-validation-for="LogModel.LoginEmail" class="text-danger"></span>
+            </label>
+            <label>
+                <span>Password</span>
+                <input asp-for="LogModel.LoginPassword" type="password" />
+                <span asp-validation-for="LogModel.LoginPassword" class="text-danger"></span>
+            </label>
+            <p class="forgot-pass">
+                <a asp-action="ForgotPassword" asp-controller="Account">Forgot password?</a>
+            </p>
+            <input type="submit" class="submit rounded rounded-pill" id="signInButton" value="Sign In">
+        </form>
+        <partial name="_ExternalloginPartial"></partial>
+
+    </div>
+
+    <div class="sub-cont">
+        <form id="signUpForm" asp-action="Register">
+            <div class="img">
+                <div class="img__text m--up">
+                    <img  src="/imgs/Logo/Flex-Logo.png">
+                    <h2>New here?</h2>
+                    <p>Sign up and discover great amount of new opportunities!</p>
+                </div>
+                <div class="img__text m--in">
+                    <img id="FormImgLogo" src="/imgs/Logo/Flex-Logo.png">
+                    <h2>One of us?</h2>
+                    <p>If you already has an account, just sign in. We've missed you!</p>
+                </div>
+                <div class="img__btn">
+                    <span class="m--up">Sign Up</span>
+                    <span class="m--in">Sign In</span>
+                </div>
+            </div>
+            <div class="form sign-up">
+                <h2>Time to feel like home,</h2>
+                <div class="d-flex align-items-center justify-content-evenly">
+                    <label>
+                        <span>First Name</span>
+                        <input asp-for="RegModel.FirstName" />
+                        <span asp-validation-for="RegModel.FirstName"></span>
+                    </label>
+                    <label>
+                        <span>Last Name</span>
+                        <input asp-for="RegModel.LastName" />
+                        <span asp-validation-for="RegModel.LastName" class="text-danger"></span>
+                    </label>
+                </div>
+                <div class="d-flex align-items-center justify-content-evenly">
+                    <label>
+                        <span>Email</span>
+                        <input asp-for="RegModel.Email" />
+                        <span asp-validation-for="RegModel.Email" class="text-danger"></span>
+                    </label>
+                    <label>
+                        <span>Phone</span>
+                        <input asp-for="RegModel.Phone" />
+                        <span asp-validation-for="RegModel.Phone" class="text-danger"></span>
+
+                    </label>
+                </div>
+                <div class="d-flex align-items-center justify-content-evenly">
+                    <label>
+                        <span>Password</span>
+                        <input asp-for="RegModel.Password" type="password" />
+                        <span asp-validation-for="RegModel.Password" class="text-danger"></span>
+                    </label>
+                    <label>
+                        <span>Confirm Password</span>
+                        <input asp-for="RegModel.ConfirmPassword" type="password" />
+                        <span asp-validation-for="RegModel.ConfirmPassword" class="text-danger"></span>
+                    </label>
+                </div>
+                <input type="submit" class="submit rounded rounded-pill" id="signUpButton" value="Sign Up">
+            </div>
+        </form>
+        <partial name="_ExternalloginPartial"></partial>
+    </div>
+
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    document.querySelector('.img__btn').addEventListener('click', function () {
+        document.querySelector('.cont').classList.toggle('s--signup');
+        document.querySelector('#FormImgLogo').classList.toggle('shiftImg');
+    });
+</script>
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

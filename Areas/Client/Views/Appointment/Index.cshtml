@@ -1,0 +1,92 @@
+﻿@model IEnumerable<Clinc_Care_MVC_Grad_PROJ.Areas.Client.Models.Appointment>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ExaminationComment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAppointmentDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedAppointmentDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsCanceled)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsPaid)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppointmentTypeIdNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppointmentDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PatientIdNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DoctorIdNavigation.EmpDoctorSpecilzations.FirstOrDefault().DoctorSpecilzationIdNavigation.SpecializationName)
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExaminationComment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAppointmentDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedAppointmentDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsCanceled)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsPaid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AppointmentTypeIdNavigation.TypeName)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.AppointmentDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PatientIdNavigation.PatientEmail)
+            </td>
+            <td>
+                    @if (item.DoctorIdNavigation.IsDeleted == false)
+                    {
+                        @Html.DisplayFor(modelItem =>
+                item.DoctorIdNavigation.EmpDoctorSpecilzations.FirstOrDefault().DoctorSpecilzationIdNavigation.SpecializationName )
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem =>
+                item.DoctorIdNavigation.DeletedEmpDoctorSpecilzations.FirstOrDefault().DoctorSpecilzationIdNavigation.SpecializationName )
+                    }
+                </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.AppointmentId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.AppointmentId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.AppointmentId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
